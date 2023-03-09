@@ -18,7 +18,7 @@ module Main where
 
 
 import Control.Concurrent (threadDelay)
-import Control.Monad (forM_)
+import Control.Monad (forM_, forever)
 import Data.Char (chr, isSpace)
 import System.Exit (die)
 import System.IO  ( Handle, stdin, stdout
@@ -91,7 +91,7 @@ waitReadable h1 h2 = waitFirst 0
     timedWait :: ([Handle] -> [Handle]) -> Handle -> IO [Handle]
     timedWait accum handle = do
       handleReady <- hWaitForInput handle 750
-      pure $ accum $ [handle | handleReady]
+      pure $ accum [handle | handleReady]
 
 
 -- |  Main loop of GHCi interaction.
@@ -129,7 +129,8 @@ mainLoop hIn hOut hErr = do
           if trim userInput == ":q"
             then  do
               putStrLn "Leaving GHCi."
-              pure ()
+              --pure ()
+              forever $ getLine >> putStrLn (tmWrap False "")
             else  do
               threadDelay 10_000
               loop

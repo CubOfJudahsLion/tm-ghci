@@ -14,10 +14,8 @@ To install, uncompress the archive for your OS at `$TEXMACS_PATH/plugins/`
 Windows) or `$TEXMACS_HOME_PATH/plugins/` (`$HOME/.TeXmacs/plugins/` in
 Linux, `%UserProfile%\AppData\Roaming\TeXmacs\plugins\` in Windows.)
 
-The plugin is rather simple --- mostly forwarding input and output --- and
-the resulting cool interaction and evaluation facilities are all TeXmacs's.
-Thanks to Joris van der Hoeven and the TeXmacs developers for giving us
-such an excellent scientific editor.
+The plugin is rather simple -- mostly forwarding input and output -- and
+the resulting interaction and evaluation facilities are all TeXmacs's.
 
 ## Buiiding and installing from source
 
@@ -34,12 +32,12 @@ Installing is straightford. Just `cd` to the `ghci` folder and write:
 Which takes care of compiling and installing the plug-in in the appropriate
 directory (`$TEXMACS_HOME_PATH`.)
 
-While this should be sufficient, this software is still in pre-alpha phase, and
-it's only been tested in Windows 10 and Arch Linux.
+While this should be sufficient, this software is still in alpha phase, and
+it's only been tested in Windows 10 and Arch Linux. 
 
 ## Limitations
 
-Currently, `tm_ghci` is at the _alpha_ stage.
+Currently, `tm_ghci` is at an _alpha_ stage.
 
 At this point, it's only able to run a vanilla `ghci` session, i.e.,
 without project dependencies autoloaded as with `stack repl` or `cabal repl`. No

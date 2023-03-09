@@ -64,11 +64,11 @@ test:
 	@echo PIE                = $(PIE)
 
 clean:
-	-rm $(SET_FILE)
-	-cd src && rm *.hi *.o *~
+	-@rm $(SET_FILE)
+	-@cd src && rm *.hi *.o *~
 
 cleanall: clean
-	-cd bin && rm *$(EXE_EXT)
+	-@cd bin && rm *$(EXE_EXT)
 
 deploy: $(TARGET_EXE) progs$(DIR_SEP_CHAR)init-ghci.scm doc$(DIR_SEP_CHAR)Help\ -\ The\ GHCi\ plug-in.tm
 	@echo :: Deploying
