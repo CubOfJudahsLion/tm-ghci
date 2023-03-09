@@ -1,18 +1,13 @@
-;; Only Windows would set these variables. MinGW or Cygwin could
-;; uppercase it.
-(define is-windows? (or (getenv "SYSTEMROOT") (getenv "SystemRoot")))
-
 ;; The name of the plugin depends on the OS.
-(define plug-in-bin
-  (if (is-windows?)
-      ("Interface.exe")
-      ("Interface.bin")))
+(define (plug-in-binary)
+  (if (getenv "SYSTEMROOT") ;; only defined in Windows
+      "GHCIInterface"
+      "GHCIInterface.bin"))
 
 
-(plugin-configure haskell
+(plugin-configure ghci
   (:require (and
               (url-exists-in-path? "ghci")
-              (url-exists-in-path? (plug-in-bin))))
-  (:launch (plug-in-bin))
-  (:session "GHCi")
-  )
+              (url-exists-in-path? (plug-in-binary))))
+  (:launch ,(plug-in-binary))
+  (:session "GHCi"))
