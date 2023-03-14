@@ -1,7 +1,7 @@
 {- |
-    Module      : GHCI Interface
+    Module      : Main
     Description : A simple GHCi plugin for TeXmacs
-    Copyright   : (c) Alexander Feterman-Naranjo, 2023
+    Copyright   : © Alexander Feterman-Naranjo, 2023
     License     : MIT
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
@@ -33,7 +33,7 @@ import System.Process (proc, CreateProcess(..), StdStream(CreatePipe), withCreat
 dataBegin, dataEnd :: Char
 dataBegin   = chr  2
 dataEnd     = chr  5
--- dataEscape  = chr 27 -- ^ used to escape @dataBegin@ or @dataEnd@.
+-- dataEscape  = chr 27 -- ^ used to escape @dataBegin@ or @dataEnd@. Not needed for now.
 
 
 -- |  TeXmacs-wrap. Sets the proper data bracketing markers
@@ -123,17 +123,15 @@ mainLoop hIn hOut hErr = do
                 wrapped =   tmWrap isLast readData
             prnFn wrapped)
           putChar dataEnd
-          --userInput     <- getUserInput
-          userInput     <- getLine
-          hPutStrLn hIn userInput
-          if trim userInput == ":q"
-            then  do
-              putStrLn "Leaving GHCi."
-              --pure ()
-              forever $ getLine >> putStrLn (tmWrap False "")
-            else  do
-              threadDelay 10_000
-              loop
+          rawInput      <-  getLine
+          let trimInput =   trim rawInput
+              input     =   if      length trimInput <= length quitCmd
+                                &&  all (uncurry (==)) (zip quitCmd trimInput)
+                              then  ""
+                              else  rawInput
+          hPutStrLn hIn input
+          threadDelay 10_000
+          loop
 
     --  This reads all of the available data of a stream
     readAllOutput :: Handle -> IO String
@@ -151,6 +149,12 @@ mainLoop hIn hOut hErr = do
     --  Trims a text from ending and starting spaces
     trim :: String -> String
     trim = reverse . dropWhile isSpace . reverse . dropWhile isSpace
+
+    --  The command to quit GHCi. We need to exclude it from
+    --  being sent to GHCi as TeXmacs much preferes to terminate
+    --  the process itsef.
+    quitCmd :: String
+    quitCmd = ":quit"
 
 
 -- |  @main@ just spawns the process and invokes the loop.

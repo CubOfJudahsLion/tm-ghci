@@ -1,4 +1,4 @@
-# tm-ghci
+# <table style="border: 0; border-style: hidden !important; padding: 0; margin: 0; border-collapse: collapse"><tr><td><img src="./texmacs.png"></td><td>&nbsp;&#183;&nbsp;</td><td><img src="./haskell.png"></td><td>&nbsp;tm-ghci</td></tr></table>
 
 A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell.org/GHC/GHCi) sessions.
 
@@ -10,14 +10,18 @@ is considerably larger due to the lack of dynamic libraries in Windows
 Haskell distributions.
 
 To install, uncompress the archive for your OS at `$TEXMACS_PATH/plugins/`
-(usually `/usr/share/TeXmacs` in Linux, _<TeXmacs_install_dir>_`\plugins\` in
-Windows) or `$TEXMACS_HOME_PATH/plugins/` (`$HOME/.TeXmacs/plugins/` in
+(usually `/usr/share/TeXmacs/plugins/` in Linux,
+_<TeXmacs_install_dir>_`\plugins\` in Windows) or
+`$TEXMACS_HOME_PATH/plugins/` (`$HOME/.TeXmacs/plugins/` in
 Linux, `%UserProfile%\AppData\Roaming\TeXmacs\plugins\` in Windows.)
+
+`ghci` needs to be in the system `PATH` for the plugin to work.
 
 The plugin is rather simple -- mostly forwarding input and output -- and
 the resulting interaction and evaluation facilities are all TeXmacs's.
 
-## Buiiding and installing from source
+
+## Building and installing from source
 
 Building the plugin requires a _bash_-style shell and a Haskell [distribution](https://www.haskell.org/downloads/).
 In Windows, this means using [MSYS2](https://www.msys2.org/). Installing Haskell
@@ -30,34 +34,28 @@ Installing is straightford. Just `cd` to the `ghci` folder and write:
     make deploy
 
 Which takes care of compiling and installing the plug-in in the appropriate
-directory (`$TEXMACS_HOME_PATH`.)
+directory (`$TEXMACS_HOME_PATH/plugins`.)
 
 While this should be sufficient, this software is still in alpha phase, and
-it's only been tested in Windows 10 and Arch Linux. 
+it's only been tested in Windows 10 and Arch Linux. I don't own a MacOS
+system, so I'm unable to provide the respective version.
+
 
 ## Limitations
 
-Currently, `tm_ghci` is at an _alpha_ stage.
+`tm_ghci` is _alpha_-stage software.
 
-At this point, it's only able to run a vanilla `ghci` session, i.e.,
-without project dependencies autoloaded as with `stack repl` or `cabal repl`. No
-autocompletion, syntax coloring or styling. The official feature set is
-still undecided.
+Presently, it's able to run a vanilla `ghci` session, i.e.,
+without project dependencies autoloaded as with `stack repl` or `cabal repl`.
 
-## Disclaimer
-
-This software is distributed _as-is_. No guarantees of usability or fitness
-for purpose, support or platform availability are offered or implied. The
-author shall not be liable for any damages resulting, directly or indirectly,
-from the use of this software.
-
-By using the software you agree to the terms set by this disclaimer.
 
 ## Licensing
 
 `tm-ghci` is distributed under the [MIT License](https://mit-license.org/).
 See the [LICENSE.txt](./LICENSE.txt) file for details.
 
+
 ## Bug reports and such
 
-Send all feedback to [`10951848+CubOfJudahsLion at users.noreply.github.com`](mailto:10951848+CubOfJudahsLion@users.noreply.github.com)
+Send feedback to 10951848+<s>nope</s>CubOfJudahsLion äτ users.noreply.github.com.
+Bug reports must include the steps required to reproduce the error.
