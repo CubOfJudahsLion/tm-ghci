@@ -3,7 +3,7 @@
 # but you do need MSYS2 for it to run properly.
 
 
-.PHONY: help clean cleanall deploy vartest
+.PHONY: help clean cleanall deploy release vartest
 
 
 # Choose an extension appropiate to the OS
@@ -15,6 +15,8 @@ COPY_CMD		:= cp
 MKDIR_CMD		:= mkdir -p
 DYNAMIC_LIBS		:= -dynamic
 PIE			:= -fPIE
+RELEASE_FILE		:= tm-ghci.tar.xz
+PACK_CMD		:= tar -cJf $(RELEASE_FILE)
 
 # Windows variables
 ifneq ("$(USERPROFILE)","")
@@ -28,20 +30,22 @@ ifneq ("$(USERPROFILE)","")
 	TEMP			:= $(shell rm $(SET_FILE))
 	DYNAMIC_LIBS		:=
 	PIE			:=
+	RELEASE_FILE		:= tm-ghci.zip
+	PACK_CMD		:= zip -q9 $(RELEASE_FILE)
 endif
 
 BASE_NAME	:= GHCIInterface
 SOURCE_FILE	:= src$(DIR_SEP_CHAR)$(BASE_NAME).hs
 TARGET_EXE	:= bin$(DIR_SEP_CHAR)$(BASE_NAME)$(EXE_EXT)
-DOC_FILE	:= doc$(DIR_SEP_CHAR)Help\ -\ The\ GHCi\ plug-in.tm
-DOC_IMG_FILE	:= doc$(DIR_SEP_CHAR)haskell.png
+DOC_FNAMES	:= ghci.en.tm ghci-abstract.en.tm ghci-demo.en.tm ghci-contact.en.tm haskell.png
+DOC_FILES	:= $(foreach fname,$(DOC_FNAMES), doc$(DIR_SEP_CHAR)$(fname))
 SCHEME_FILE	:= progs$(DIR_SEP_CHAR)init-ghci.scm
 
 DEPLOY_DIR	:= $(TEXMACS_PLUGIN_DIR)$(DIR_SEP_CHAR)$(OWN_DIR)
+DOC_DEPLOY_DIR	:= $(DEPLOY_DIR)$(DIR_SEP_CHAR)doc
 
 DEPLOY_TARGET_EXE	:= $(DEPLOY_DIR)$(DIR_SEP_CHAR)$(TARGET_EXE)
-DEPLOY_DOC_FILE		:= $(DEPLOY_DIR)$(DIR_SEP_CHAR)$(DOC_FILE)
-DEPLOY_DOC_IMG_FILE	:= $(DEPLOY_DIR)$(DIR_SEP_CHAR)$(DOC_IMG_FILE)
+DEPLOY_DOC_FILES	:= $(foreach fpath,$(DOC_FILES),$(DEPLOY_DIR)$(DIR_SEP_CHAR)$(fpath))
 DEPLOY_SCHEME_FILE	:= $(DEPLOY_DIR)$(DIR_SEP_CHAR)$(SCHEME_FILE)
 
 
@@ -70,13 +74,13 @@ vartest:
 	@echo DYNAMIC_LIBS        = $(DYNAMIC_LIBS)
 	@echo PIE                 = $(PIE)
 	@echo TARGET_EXE          = $(TARGET_EXE)
-	@echo DOC_FILE            = $(DOC_FILE)
-	@echo DOC_IMG_FILE        = $(DOC_IMG_FILE)
+	@echo DOC_FILES           = $(DOC_FILES)
 	@echo SCHEME_FILE         = $(SCHEME_FILE)
 	@echo DEPLOY_TARGET_EXE   = $(DEPLOY_TARGET_EXE)
-	@echo DEPLOY_DOC_FILE     = $(DEPLOY_DOC_FILE)
-	@echo DEPLOY_DOC_IMG_FILE = $(DEPLOY_DOC_IMG_FILE)
+	@echo DEPLOY_DOC_FILES    = $(DEPLOY_DOC_FILES)
 	@echo DEPLOY_SCHEME_FILE  = $(DEPLOY_SCHEME_FILE)
+	@echo RELEASE_FILE        = $(RELEASE_FILE)
+	@echo PACK_CMD            = $(PACK_CMD)
 
 clean:
 	-@rm $(SET_FILE)
@@ -85,13 +89,19 @@ clean:
 cleanall: clean
 	-@cd bin && rm -f *
 
-$(DEPLOY_TARGET_EXE) $(DEPLOY_DOC_FILE) $(DEPLOY_IMG_FILE) $(DEPLOY_SCHEME_FILE): $(TARGET_EXE) $(DOC_FILE) $(DOC_IMG_FILE) $(SCHEME_FILE)
+$(DEPLOY_TARGET_EXE) $(DEPLOY_DOC_FILES) $(DEPLOY_SCHEME_FILE): $(TARGET_EXE) $(DOC_FILES) $(SCHEME_FILE)
 	@echo :: Deploying
 	$(MKDIR_CMD) $(DEPLOY_DIR)$(DIR_SEP_CHAR){bin,doc,progs}
 	@$(COPY_CMD) $(TARGET_EXE) $(DEPLOY_TARGET_EXE)
 	@$(COPY_CMD) $(SCHEME_FILE) $(DEPLOY_SCHEME_FILE)
-	@$(COPY_CMD) $(DOC_FILE) $(DEPLOY_DOC_FILE)
-	@$(COPY_CMD) $(DOC_IMG_FILE) $(DEPLOY_DOC_IMG_FILE)
+	$(COPY_CMD) $(DOC_FILES) $(DOC_DEPLOY_DIR)
 
 deploy: $(DEPLOY_TARGET_EXE) $(DEPLOY_DOC_FILE) $(DEPLOY_DOC_IMG_FILE) $(DEPLOY_SCHEME_FILE)
 
+.ONESHELL:
+..$(DIR_SEP_CHAR)$(RELEASE_FILE): $(TARGET_EXE) $(DOC_FILES) $(SCHEME_FILE)
+	@cd ..
+	@-rm ../$(RELEASE_FILE) &> /dev/null
+	$(PACK_CMD) $(foreach file,$^,ghci/$(file))
+
+release: ..$(DIR_SEP_CHAR)$(RELEASE_FILE)

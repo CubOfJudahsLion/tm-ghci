@@ -3,18 +3,7 @@
 <style|tmdoc>
 
 <\body>
-  <tmdoc-title|The GHCi plug-in>
-
-  <section|<name|GHCi> and <name|Haskell>>
-
-  <name|GHCi> is the interactive <acronym|REPL> (<dfn|read-eval-print-loop>)
-  of the <hlink|<name|Glasgow Haskell Compiler>|https://www.haskell.org/ghc/>,
-  the de-facto standard implementation of the
-  <hlink|<image|./haskell.png|13pt|11pt||><name|Haskell>|https://www.haskell.org/>
-  language. <name|Haskell> is purely-functional, with non-strict evaluation
-  and a static, sound, inferring type system.
-
-  <section|Usage>
+  <tmdoc-title|Usage and Example>
 
   Select the menu option <menu|Insert|Session|GHCi>, and <TeXmacs> will
   display the <name|GHCi> version notice and prompt:
@@ -114,27 +103,10 @@
   <key|Enter>. After a moment, it produces the desired result. Hit
   <key|Enter> again to see the source expression once more and edit it as
   needed.
-
-  <section|Contact>
-
-  <\itemize>
-    <item>Email: <verbatim|10951848+CubOfJudahsLion ä\<tau\>
-    users.noreply.github.com>.
-
-    <item>Bug reports must include the steps required to reproduce the error.
-
-    <item><name|GitHub> repo: <hlink|CubOfJudahsLion/tm-ghci|https://github.com/CubOfJudahsLion/tm-ghci>.
-  </itemize>
-
-  \;
 </body>
 
 <\initial>
   <\collection>
-    <associate|page-height|auto>
     <associate|page-medium|paper>
-    <associate|page-type|letter>
-    <associate|page-width|auto>
-    <associate|preamble|false>
   </collection>
 </initial>

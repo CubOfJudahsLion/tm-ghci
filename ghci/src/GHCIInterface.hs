@@ -18,7 +18,7 @@ module Main where
 
 
 import Control.Concurrent (threadDelay)
-import Control.Monad (forM_, forever)
+import Control.Monad (forM_)
 import Data.Char (chr, isSpace)
 import System.Exit (die)
 import System.IO  ( Handle, stdin, stdout
@@ -33,7 +33,7 @@ import System.Process (proc, CreateProcess(..), StdStream(CreatePipe), withCreat
 dataBegin, dataEnd :: Char
 dataBegin   = chr  2
 dataEnd     = chr  5
--- dataEscape  = chr 27 -- ^ used to escape @dataBegin@ or @dataEnd@. Not needed for now.
+-- dataEscape  = chr 27 -- ^  used to escape @dataBegin@ or @dataEnd@. Not needed for now.
 
 
 -- |  TeXmacs-wrap. Sets the proper data bracketing markers
