@@ -1,4 +1,4 @@
-# <table style="border: 0px; padding: 0; margin: 0; border-collapse: collapse !important"><tr><td><img src="./texmacs.png"></td><td>&nbsp;&#183;&nbsp;</td><td><img src="./haskell.png"></td><td> \-\- tm-ghci</td></tr></table>
+# ![TeXmacs Logo](./texmacs.png)&nbsp;&#183;&nbsp;![Haskell logo](./haskell.png)&nbsp;&nbsp;\-\- tm-ghci
 
 A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell.org/GHC/GHCi) sessions.
 
@@ -6,9 +6,10 @@ A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell
 ## Installing
 ### From release files
 
-The executable binaries are compiled with GHC 9.2.5. The Windows binary
-is considerably larger due to the lack of dynamic libraries in Windows
-Haskell distributions.
+The executable binaries are compiled with GHC 9.2.5, and they can be
+obtained from the [releases](https://github.com/CubOfJudahsLion/tm-ghci/releases)
+page. The Windows binary is considerably larger due to the lack of dynamic
+libraries in Haskell distributions for Windows.
 
 To install, uncompress the archive for your OS at `$TEXMACS_PATH/plugins/`
 (usually `/usr/share/TeXmacs/plugins/` in Linux,
@@ -26,26 +27,27 @@ the resulting interaction and evaluation facilities are all TeXmacs's.
 Building the plugin requires a _bash_-style shell and a Haskell [distribution](https://www.haskell.org/downloads/).
 In Windows, this means using [MSYS2](https://www.msys2.org/). Installing Haskell
 through [ghcup](https://www.haskell.org/ghcup/install/) allows setting up a
-MSYS2 directory (recommended) and installing the `mingw64` toolchain so that
+MSYS2 directory (recommended) and installing the development tools so that
 `make`, `strip` and other required utilities will be available.
 
-Installing is straightford. Just `cd` to the `ghci` folder and write:
+Installing is simple. Just `cd` to the `ghci` folder and write:
 
     make deploy
 
 Which takes care of compiling and installing the plug-in in the appropriate
 directory (`$TEXMACS_HOME_PATH/plugins`.)
 
-While this should be sufficient, this software is still in alpha phase, and
-it's only been tested in Windows 10 and Arch Linux. I don't own a MacOS
-system, so I'm unable to provide the respective version.
+While this should be sufficient, this software is still in alpha phase.
+Please report any mishaps to the email address below.
 
 
 ## Features and Limitations
 
-`tm_ghci` is _alpha_-stage software.
+`tm_ghci` is _alpha_-stage software. It's only been tested in Windows 10 and
+Arch Linux. I don't own a MacOS system, so I'm unable to provide the
+respective version.
 
-Presently, it's able to run a vanilla `ghci` session, i.e.,
+Presently, the plugin is able to run a vanilla `ghci` session, i.e.,
 without project dependencies autoloaded as with `stack repl` or `cabal repl`.
 
 ### Planned features
@@ -63,12 +65,11 @@ See the [LICENSE.txt](./LICENSE.txt) file for details.
 
 ## Bug reports and such
 
-Send feedback to 10951848+<s>nope</s>CubOfJudahsLion äτ users.noreply.github.com.
-Bug reports must include the steps required to reproduce the error.
+* Send feedback to 10951848+<s>nope</s>CubOfJudahsLion äτ users.noreply.github.com.
+* Bug reports must include the steps required to reproduce the error.
 
 
 ## Thanks to
 
 * _The TeXmacs developers_ for giving us such a magnificent tool.
-* _Massimiliano Gubinelli_ for setting me straight on the help file mechanism
-  for plug-ins.
+* _Massimiliano Gubinelli_ for setting me straight on the plugin help file mechanism.

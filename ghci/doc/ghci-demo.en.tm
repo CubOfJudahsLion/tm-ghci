@@ -1,4 +1,4 @@
-<TeXmacs|2.1.1>
+<TeXmacs|2.1.2>
 
 <style|tmdoc>
 
@@ -22,7 +22,7 @@
     </unfolded-io>
 
     <\input>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|input>
       :{
     </input>
@@ -70,7 +70,7 @@
     </input>
 
     <\unfolded-io>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|unfolded-io>
       powerSet [1,2,3,4]
     <|unfolded-io>
@@ -78,7 +78,7 @@
     </unfolded-io>
 
     <\input>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|input>
       \;
     </input>
