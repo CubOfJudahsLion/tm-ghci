@@ -1,4 +1,4 @@
-# ![TeXmacs Logo](./texmacs.png)&nbsp;&#183;&nbsp;![Haskell logo](./haskell.png)&nbsp;&nbsp;\-\- tm-ghci
+# ![TeXmacs Logo](./texmacs.png)&nbsp;&#183;&nbsp;![Haskell logo](./haskell.png)&nbsp;&nbsp;\=\= tm-ghci
 
 A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell.org/GHC/GHCi) sessions.
 
@@ -6,7 +6,7 @@ A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell
 ## Installing
 ### From release files
 
-The executable binaries are compiled with GHC 9.2.5, and they can be
+Last release binaries are compiled with GHC 9.2.7, and they can be
 obtained from the [releases](https://github.com/CubOfJudahsLion/tm-ghci/releases)
 page. The Windows binary is considerably larger due to the lack of dynamic
 libraries in Haskell distributions for Windows.
@@ -17,10 +17,11 @@ _<TeXmacs_install_dir>_`\plugins\` in Windows) or
 `$TEXMACS_HOME_PATH/plugins/` (`$HOME/.TeXmacs/plugins/` in
 Linux, `%UserProfile%\AppData\Roaming\TeXmacs\plugins\` in Windows.)
 
-`ghci` needs to be in the system `PATH` for the plugin to work.
+`ghci` needs to be in the system `$PATH` for the plugin to work.
 
-The plugin is rather simple -- mostly forwarding input and output -- and
-the resulting interaction and evaluation facilities are all TeXmacs's.
+The plugin itself is simple -- mostly forwarding input and output. The
+resulting interaction and evaluation features are all TeXmacs's.
+
 
 ### Building and installing from source
 
@@ -43,18 +44,34 @@ Please report any mishaps to the email address below.
 
 ## Features and Limitations
 
-`tm_ghci` is _alpha_-stage software. It's only been tested in Windows 10 and
-Arch Linux. I don't own a MacOS system, so I'm unable to provide the
-respective version.
+The primary function of the plugin is to execute input (originating from
+TeXmacs) in GHCi and pass the results back. TeXmacs uses this to provide
+not just a better-typeset REPL, but some interesting features such as
+background evaluation, expression cells and even spreadsheets built out
+Haskell expressions and GHCi commands.
 
-Presently, the plugin is able to run a vanilla `ghci` session, i.e.,
-without project dependencies autoloaded as with `stack repl` or `cabal repl`.
+For this version, I felt a little ambitious and decided to add all of the
+functionality I'd want if I were to get serious about writing and
+documenting an extensive Haskell project.
+
+I believe I'd need for working 
+project contexts tab-completion, importing syntax-highlighted Haskell code
+and making Haskell/GHCi a _scripting_ language in TeXmacs were incorporated.
+The new features required code reorganization: tm-ghci is no longer a
+single-file project. It's no longer an exercise demonstrating how simple
+it is to implement a TeXmacs plug-in in Haskell, but I'm hoping proper
+module organization will keep each feature bite-sized.
+
+`tm_ghci` is _beta_-stage software. It's only been tested in Windows 10 and
+Arch Linux. I don't own a MacOS system, so I'm unable to provide the
+respective version. If anyone is willing to volunteer to compile and test,
+please drop me a line.
+
 
 ### Planned features
 
-The feature set is also a work in progress. I hope to add an importer for
-Haskell code (`*.hs`), though not one for Literate Haskell. TeXmacs already
-has a mechanism for importing LaTeX.
+TeXmacs already has a mechanism for importing LaTeX, so I'm not planning
+on importing `.lhs` files. 
 
 
 ## Licensing

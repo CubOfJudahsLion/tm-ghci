@@ -4,7 +4,7 @@
 ;;              Haskell source importing
 ;; COPYRIGHT  : (C) 2023 Alexander Feterman-Naranjo <feterman at hotmail dot com>
 ;;
-;; This software is distributed under the MIT license.
+;; Distributed under the MIT license.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -33,7 +33,8 @@
                  (url-exists-in-path? (ghci-plug-in-binary))))
   (:launch ,(ghci-plug-in-binary))
   (:session "GHCi")
-  (:scripts "GHCi"))
+  ;; (:scripts "GHCi")
+  (:tab-completion #t))
 
 
 
