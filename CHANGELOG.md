@@ -1,5 +1,11 @@
 # Revision history for tm-ghci
+## 0.2.0.0 -- 2023/06/14
 
-## 0.2.0.0 -- YYYY-mm-dd
+* Code reorganization into cabal project
+* New feature: importing Haskell files (`.hs`)
+* New feature: Haskell/GHCi as scripting language
+* New feature: 
 
-* First version. Released on an unsuspecting world.
+## 0.1.0.0 -- ??
+
+* First version. Simple REPL and basic TeXmacs functionality.

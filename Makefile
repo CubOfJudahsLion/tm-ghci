@@ -1,17 +1,19 @@
 # Scripts for building and other things.
-# The script takes into account Widowsn platforms,
-# but you do need MSYS2 for it to run properly.
+# This builds on Linux and MSys2 (the executables
+# don't have MSys dependencies, though.)
 
 
 .PHONY: help clean cleanall deploy release vartest
 
 
-EXE_EXT 		:= .bin
+EXE_EXT 		:=
 TEXMACS_PLUGIN_DIR	:= ${HOME}/.TeXmacs/plugins
 COPY_CMD		:= cp -f
 MKDIR_CMD		:= mkdir -p
-DYNAMIC_LIBS		:= -dynamic
-PIE			:= -fPIE
+#DYNAMIC_LIBS		:= -dynamic
+#PIE			:= -fPIE
+DYNAMIC_LIBS		:= --enable-executable-dynamic
+PIE			:= --enable-relocatable
 PLATFORM		:= linux
 VERSION_FILE		:= version.txt
 TEMP 			:= $(shell git tag -l 'v-*' --sort=-version:refname \
@@ -41,7 +43,9 @@ ifneq ("$(USERPROFILE)","")
 	PACK_ARGS		:= -q9
 endif
 
-RELEASE_FILE		:= tm-ghci.x86_64.$(PLATFORM).$(VERSION).$(RELEASE_EXT)
+PROJECT_NAME		:= tm-ghci
+
+RELEASE_FILE		:= $(PROJECT_NAME).x86_64.$(PLATFORM).$(VERSION).$(RELEASE_EXT)
 PACK_CMD		:= $(PACK_CMD_NAME) $(PACK_ARGS) $(RELEASE_FILE)
 
 # Generate a version file we can use in Haskell
@@ -51,13 +55,18 @@ TEMP			:= $(shell echo "gitVersion :: String" >> $(HS_VERSION_FILE))
 TEMP			:= $(shell echo "gitVersion = \"$(VERSION)\"" >> $(HS_VERSION_FILE))
 undefine TEMP
 
-DOC_FNAMES		:= ghci.en.tm ghci-abstract.en.tm ghci-demo.en.tm ghci-contact.en.tm haskell.png
+DOC_FNAMES		:= $(PROJECT_NAME).en.tm $(PROJECT_NAME)-abstract.en.tm $(PROJECT_NAME)-demo.en.tm $(PROJECT_NAME)-contact.en.tm haskell.png
 DOC_FILES		:= $(foreach fname,$(DOC_FNAMES), doc/$(fname))
 
-SCHEME_FILE		:= progs/init-ghci.scm
+SCHEME_FILE		:= progs/init-$(PROJECT_NAME).scm
 
 DEPLOY_DIR		:= $(TEXMACS_PLUGIN_DIR)/ghci
 DOC_DEPLOY_DIR		:= $(DEPLOY_DIR)/doc
+
+CABAL_FILENAME		:= $(PROJECT_NAME).cabal
+EXE_FILENAME		:= $(PROJECT_NAME)$(EXE_EXT)
+
+TARGET_EXE		:= bin/$(EXE_FILENAME)
 
 DEPLOY_TARGET_EXE	:= $(DEPLOY_DIR)/$(TARGET_EXE)
 DEPLOY_DOC_FILES	:= $(foreach fpath,$(DOC_FILES),$(DEPLOY_DIR)/$(fpath))
@@ -66,7 +75,7 @@ DEPLOY_SCHEME_FILE	:= $(DEPLOY_DIR)/$(SCHEME_FILE)
 $(TARGET_EXE): tm-ghci.cabal src/Main.hs
 	@echo :: Compiling session interface
 	cabal build -j --bindir=bin -O2 --disable-debug-info --enable-executable-stripping
-	#ghc -O2 -g0 $(DYNAMIC_LIBS) $(PIE) $< -o $@
+#	ghc -O2 -g0 $(DYNAMIC_LIBS) $(PIE) $< -o $@
 	@echo :: Stripping
 	strip -s -x -w -R .comment -R .note\* $@
 
@@ -88,6 +97,10 @@ vartest:
 	@echo MKDIR_CMD           = $(MKDIR_CMD)
 	@echo DYNAMIC_LIBS        = $(DYNAMIC_LIBS)
 	@echo PIE                 = $(PIE)
+	@echo CABAL_FILENAME      = $(CABAL_FILENAME)
+	@echo DOC_FILES           = $(DOC_FILES)
+	@echo SCHEME_FILE         = $(SCHEME_FILE)
+	@echo EXE_FILENAME        = $(EXE_FILENAME)
 	@echo TARGET_EXE          = $(TARGET_EXE)
 	@echo DOC_FILES           = $(DOC_FILES)
 	@echo SCHEME_FILE         = $(SCHEME_FILE)

@@ -25,17 +25,19 @@ resulting interaction and evaluation features are all TeXmacs's.
 
 ### Building and installing from source
 
-Building the plugin requires a _bash_-style shell and a Haskell [distribution](https://www.haskell.org/downloads/).
-In Windows, this means using [MSYS2](https://www.msys2.org/). Installing Haskell
-through [ghcup](https://www.haskell.org/ghcup/install/) allows setting up a
-MSYS2 directory (recommended) and installing the development tools so that
-`make`, `strip` and other required utilities will be available.
+Building the plugin requires a _bash_-style shell and a Haskell
+[distribution](https://www.haskell.org/downloads/). In Windows, this means
+using [MSYS2](https://www.msys2.org/). Installing through
+[ghcup](https://www.haskell.org/ghcup/install/) allows setting up a MSys2
+distribution for your Haskell setup alone (recommended) and installing the
+development tools so that `make`, `strip` and other required utilities are
+available.
 
-Installing is simple. Just `cd` to the `ghci` folder and write:
+Once this is done, type:
 
     make deploy
 
-Which takes care of compiling and installing the plug-in in the appropriate
+which takes care of compiling and installing the plug-in in the appropriate
 directory (`$TEXMACS_HOME_PATH/plugins`.)
 
 While this should be sufficient, this software is still in alpha phase.
@@ -50,28 +52,23 @@ not just a better-typeset REPL, but some interesting features such as
 background evaluation, expression cells and even spreadsheets built out
 Haskell expressions and GHCi commands.
 
-For this version, I felt a little ambitious and decided to add all of the
-functionality I'd want if I were to get serious about writing and
-documenting an extensive Haskell project.
+For this version, I decided to add all of the functionality I'd want if I
+were to get serious about writing and documenting an extensive Haskell
+project. A few new features have been added: project awareness (i.e., it
+will run a REPL using project assets), tab-completion, importing
+syntax-highlighted Haskell code and making Haskell/GHCi a _scripting_
+language.
 
-I believe I'd need for working 
-project contexts tab-completion, importing syntax-highlighted Haskell code
-and making Haskell/GHCi a _scripting_ language in TeXmacs were incorporated.
-The new features required code reorganization: tm-ghci is no longer a
-single-file project. It's no longer an exercise demonstrating how simple
-it is to implement a TeXmacs plug-in in Haskell, but I'm hoping proper
-module organization will keep each feature bite-sized.
+Those new features required extensive code reorganization: tm-ghci is no
+longer a single-file project -- or a demonstration of how simple it is to
+implement a TeXmacs plug-in in Haskell. Nevertheless I'm hoping proper
+module organization will still convey that impression for each individual
+feature.
 
 `tm_ghci` is _beta_-stage software. It's only been tested in Windows 10 and
 Arch Linux. I don't own a MacOS system, so I'm unable to provide the
 respective version. If anyone is willing to volunteer to compile and test,
 please drop me a line.
-
-
-### Planned features
-
-TeXmacs already has a mechanism for importing LaTeX, so I'm not planning
-on importing `.lhs` files. 
 
 
 ## Licensing

@@ -1,5 +1,5 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; MODULE     : init-ghci.scm
+;; MODULE     : init-tm-ghci.scm
 ;; DESCRIPTION: Initialization of GHCi plugin
 ;;              Haskell source importing
 ;; COPYRIGHT  : (C) 2023 Alexander Feterman-Naranjo <feterman at hotmail dot com>
@@ -13,13 +13,7 @@
 
 
 ;;  Base name of the binary
-(define binary-base-name "GHCiInterface")
-
-;;  The actual name of the plugin binary depends on the OS.
-(define (ghci-plug-in-binary)
-  (if (getenv "SYSTEMROOT") ;; only defined in Windows
-      binary-base-name
-      (string-append binary-base-name ".bin")))
+(define (binary-name) "tm-ghci")
 
 
 ;; ;;  Session serializer
@@ -31,10 +25,11 @@
 (plugin-configure ghci
   (:require (and (url-exists-in-path? "ghci")
                  (url-exists-in-path? (ghci-plug-in-binary))))
-  (:launch ,(ghci-plug-in-binary))
+  (:launch ,(binary-name))
   (:session "GHCi")
   ;; (:scripts "GHCi")
-  (:tab-completion #t))
+  ;; (:tab-completion #t)
+  )
 
 
 
