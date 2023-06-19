@@ -1,4 +1,4 @@
-# ![TeXmacs Logo](./texmacs.png)&nbsp;&#183;&nbsp;![Haskell logo](./haskell.png)&nbsp;&nbsp;\=\= tm-ghci
+# tm-ghci = ![TeXmacs Logo](./texmacs.png)&nbsp;&#183;&nbsp;![Haskell logo](./haskell.png)
 
 A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell.org/GHC/GHCi) sessions.
 
