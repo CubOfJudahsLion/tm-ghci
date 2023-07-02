@@ -10,7 +10,7 @@ maintainer:         10951848+CubOfJudahsLion@users.noreply.github.com
 copyright:          (c) 2022-2023 Alexander Feterman Naranjo
 category:           Language
 build-type:         Simple
-tested-with:        GHC == 9.2.7
+tested-with:        GHC == 9.2.8
 stability:          experimental
 extra-source-files: README.md,
                     haskell.png,

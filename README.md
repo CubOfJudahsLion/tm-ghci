@@ -6,7 +6,7 @@ A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell
 ## Installing
 ### From release files
 
-Last release binaries are compiled with GHC 9.2.7, and they can be
+Last release binaries are compiled with GHC 9.2.8, and they can be
 obtained from the [releases](https://github.com/CubOfJudahsLion/tm-ghci/releases)
 page. The Windows binary is considerably larger due to the lack of dynamic
 libraries in Haskell distributions for Windows.
