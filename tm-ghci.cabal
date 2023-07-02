@@ -1,4 +1,4 @@
-cabal-version:      3.0
+cabal-version:      2.0
 name:               tm-ghci
 version:            0.2.0.0
 synopsis:           A TeXmacs plugin for serious Haskell/GHCi work
@@ -12,12 +12,11 @@ category:           Language
 build-type:         Simple
 tested-with:        GHC == 9.2.7
 stability:          experimental
-extra-source-files: README.md
-                  , haskell.png
-                  , texmacs.png
-                  , CHANGELOG.md
-                  , LICENSE
-                  , Makefile
+extra-source-files: README.md,
+                    haskell.png,
+                    texmacs.png,
+                    CHANGELOG.md,
+                    Makefile
 
 flag debug
   description:  Enable debug support
@@ -25,16 +24,26 @@ flag debug
   manual:       True
 
 executable tm-ghci
-  main-is:                Main.hs
-  build-depends:          base ^>=4.16.4.0, attoparsec ^>= 0.14.4
-  hs-source-dirs:         src
-  other-modules :         GHCiInterface, GitVersion
-  ghc-options:            -j -Wall
-  default-language:       Haskell2010
+  main-is:            Main.hs
+  build-depends:      attoparsec,
+                      base,
+                      conduit,
+                      directory,
+                      either,
+                      filepath,
+                      ghc,
+                      mtl,
+                      process,
+                      transformers
+  hs-source-dirs:     src
+  other-modules :     GitVersion,
+                      Launch
+  ghc-options:      -j -Wall
+  default-language: Haskell2010
   if os(linux)
-    ghc-options:          -dynamic -fPIE
+    ghc-options:    -dynamic -fPIE
   if flag(debug)
-    ghc-options:          -DDEBUG -debug -g2
-    executable-stripping: False
+    ghc-options:    -DDEBUG -debug -g2 -O0
   else
-    ghc-options:          -O2 -g0
+    ghc-options:    -O2 -g0
+

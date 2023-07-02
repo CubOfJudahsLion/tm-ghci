@@ -40,30 +40,29 @@ Once this is done, type:
 which takes care of compiling and installing the plug-in in the appropriate
 directory (`$TEXMACS_HOME_PATH/plugins`.)
 
-While this should be sufficient, this software is still in alpha phase.
+While this should be sufficient, this software is still in beta phase.
 Please report any mishaps to the email address below.
 
 
 ## Features and Limitations
 
-The primary function of the plugin is to execute input (originating from
-TeXmacs) in GHCi and pass the results back. TeXmacs uses this to provide
-not just a better-typeset REPL, but some interesting features such as
-background evaluation, expression cells and even spreadsheets built out
-Haskell expressions and GHCi commands.
+The primary function of the plugin is to pass TeXmacs's input to GHCi and
+then report back. That's it. However, that's enough for TeXmacs to do
+plenty, beyond providing just a better-typeset REPL: background evaluation,
+referrable expression cells -- even spreadsheets built out of Haskell/GHCi
+expressions.
 
 For this version, I decided to add all of the functionality I'd want if I
 were to get serious about writing and documenting an extensive Haskell
-project. A few new features have been added: project awareness (i.e., it
-will run a REPL using project assets), tab-completion, importing
-syntax-highlighted Haskell code and making Haskell/GHCi a _scripting_
-language.
+project. These new features will be added: project awareness (i.e., tm-ghci
+will run a Cabal or Stack REPL using project assets), tab-completion,
+importing syntax-highlighted Haskell code and making Haskell/GHCi a 
+_scripting_ language.
 
-Those new features required extensive code reorganization: tm-ghci is no
-longer a single-file project -- or a demonstration of how simple it is to
-implement a TeXmacs plug-in in Haskell. Nevertheless I'm hoping proper
+Those new features imply some refactoring. The minimalistically didactical
+single-file project simply  _has_ to go away. Nevertheless I'm hoping proper
 module organization will still convey that impression for each individual
-feature.
+feature, as the features are, in my opinion, worth having.
 
 `tm_ghci` is _beta_-stage software. It's only been tested in Windows 10 and
 Arch Linux. I don't own a MacOS system, so I'm unable to provide the
@@ -74,7 +73,7 @@ please drop me a line.
 ## Licensing
 
 `tm-ghci` is distributed under the [MIT License](https://mit-license.org/).
-See the [LICENSE.txt](./LICENSE.txt) file for details.
+See the [LICENSE](./LICENSE) file for details.
 
 
 ## Bug reports and such

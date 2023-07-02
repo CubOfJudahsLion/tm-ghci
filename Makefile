@@ -3,8 +3,6 @@
 # don't have MSys dependencies, though.)
 
 
-.PHONY: help clean cleanall deploy release vartest
-
 PROJECT_NAME		:= tm-ghci
 
 DIR_SEP			:= /
@@ -30,7 +28,8 @@ ifneq ("$(USERPROFILE)","")
 	USER_PROFILE		:= $(shell   set \
 				           | sed -re "/^USERPROFILE=/ { \
 				                        s/^USERPROFILE='([^']*)'/\1/; \
-				                        s:\\\\:\\\\\\\\:gp; \
+				                        s:\\\\:\\\\\\\\:g; \
+							p; \
 						      }; \
 				                      d")
 	TEXMACS_PLUGIN_DIR	:= $(USER_PROFILE)\\AppData\\Roaming\\TeXmacs\\plugins
@@ -40,22 +39,23 @@ ifneq ("$(USERPROFILE)","")
 	PACK_ARGS		:= -q9
 endif
 
-SOURCE_FILES		:= $(shell   ls -1R src \
-			           | sed -re '/:$$/{ s|:$$|/|; h; d; }; \
-				              /OlderSingle/ d; \
-					      /hs2tm/ d; \
-					      /\.hs/ { G; s/^([^\n]*)\n(.*)$$/\2\1/p; }; \
-					      d')
-
 # Generate a version file we can use in Haskell
 HS_VERSION_FILENAME	:= GitVersion.hs
-HS_VERSION_FILE 	:= src$(DIR_SEP)$(HS_VERSION_FILENAME)
+HS_VERSION_FILE 	:= src/$(HS_VERSION_FILENAME)
 TEMP			:= $(shell echo "module GitVersion where" > $(HS_VERSION_FILE))
 TEMP			:= $(shell echo "gitVersion :: String" >> $(HS_VERSION_FILE))
 TEMP			:= $(shell echo "gitVersion = \"$(VERSION)\"" >> $(HS_VERSION_FILE))
 undefine TEMP
 
-DOC_FILES		:= $(subst /,$(DIR_SEP),$(wildcard doc/$(PROJECT_NAME)-*.tm))
+SOURCE_FILES		:= $(filter-out $(HS_VERSION_FILE), \
+			     $(shell   ls -1R src \
+			             | sed -re '/:$$/{ s|:$$|/|; h; d; }; \
+			                        /OlderSingle/ d; \
+			                        /hs2tm/ d; \
+			                        /\.hs$$/ { G; s/^([^\n]*)\n(.*)$$/\2\1/p; }; \
+			                        d'))
+
+DOC_FILES		:= $(subst /,$(DIR_SEP),$(wildcard doc/$(PROJECT_NAME)-*.en.tm))
 
 SCHEME_FILE		:= progs$(DIR_SEP)init-$(PROJECT_NAME).scm
 
@@ -77,6 +77,8 @@ PACK_CMD		:= $(PACK_CMD_NAME) $(PACK_ARGS) $(RELEASE_FILE)
 
 # ======= RULES =======
 
+.PHONY: help clean cleanall deploy release vartest debug
+
 # Ignore failure in clean-up commands
 .IGNORE: clean cleanall
 
@@ -84,7 +86,7 @@ PACK_CMD		:= $(PACK_CMD_NAME) $(PACK_ARGS) $(RELEASE_FILE)
 .SILENT: $(TARGET_EXE) help vartest clean cleanall $(DEPLOY_TARGET_EXE) $(DEPLOY_DOC_FILES) $(DEPLOY_SCHEME_FILE) $(RELEASE_FILE)
 
 
-$(TARGET_EXE): tm-ghci.cabal $(SOURCE_FILES)
+$(TARGET_EXE): tm-ghci.cabal Setup.hs $(SOURCE_FILES)
 	echo :: Compiling session interface
 	cabal build -j --bindir=./bin --enable-executable-stripping
 	$(MKDIR_CMD) bin
@@ -95,7 +97,7 @@ help:
 	echo "Calling make without arguments just builds"
 	echo "the release executable $(TARGET_EXE)."
 	echo
-	echo "Call with 'debug'    to build an executable for debugging,"
+	#echo "Call with 'debug'    to build an executable for debugging,"
 	echo "Call with 'clean'    to remove temp files,"
 	echo "Call with 'cleanall' to remove temp files and executables,"
 	echo "Call with 'deploy'   to install in your TeXmacs plugin directory,"
@@ -117,10 +119,8 @@ vartest:
 	echo MKDIR_CMD           = $(MKDIR_CMD)
 	echo PACK_CMD            = $(PACK_CMD)
 	echo PLATFORM            = $(PLATFORM)
-	echo PLATFORM            = $(PLATFORM)
 	echo PROJECT_NAME        = $(PROJECT_NAME)
 	echo RELEASE_FILE        = $(RELEASE_FILE)
-	echo SCHEME_FILE         = $(SCHEME_FILE)
 	echo SCHEME_FILE         = $(SCHEME_FILE)
 	echo SOURCE_FILES        = $(SOURCE_FILES)
 	echo TARGET_EXE          = $(TARGET_EXE)
