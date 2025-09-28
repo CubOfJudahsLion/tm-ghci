@@ -4,6 +4,7 @@ A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell
 
 
 ## Installing
+
 ### From release files
 
 The release archives contain statically linked files, which makes it
@@ -20,9 +21,8 @@ Linux, `%UserProfile%\AppData\Roaming\TeXmacs\plugins\` in Windows.)
 The plugin is rather simple -- mostly forwarding input and output.
 the resulting interaction and evaluation facilities are all TeXmacs's.
 
+
 ### Building and installing from source
-
-
 
 Building the plugin requires a _bash_-style shell and a Haskell
 distribution (GHC 9.2.5 or later.) In Windows, this means installing
@@ -68,3 +68,4 @@ Bug reports must include the steps required to reproduce the error.
 * _The TeXmacs developers_ for giving us such a magnificent tool.
 * _Massimiliano Gubinelli_ for setting me straight on the help file mechanism
   for plug-ins.
+
