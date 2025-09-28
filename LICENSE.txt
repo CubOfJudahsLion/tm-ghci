@@ -1,4 +1,4 @@
-             GNU General Public License, Version 3
+               GNU General Public License, Version 3.0
 
 Copyright (C) 2023, 2025 Alexander Feterman Naranjo.
 
