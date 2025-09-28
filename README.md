@@ -1,4 +1,4 @@
-# <table style="border: 0px; padding: 0; margin: 0; border-collapse: collapse !important"><tr><td><img src="./texmacs.png"></td><td>&nbsp;&#183;&nbsp;</td><td><img src="./haskell.png"></td><td> \-\- tm-ghci</td></tr></table>
+# <table style="border: 0px; padding: 0; margin: 0; border: 0; border-collapse: collapse !important"><tr><td>tm-ghci &#x2237;&nbsp;</td><td><img src="./haskell.png"></td><td>&nbsp;&#x2192;&nbsp;</td><td><img src="./texmacs.png"></td></tr></table>
 
 A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell.org/GHC/GHCi) sessions.
 
@@ -6,9 +6,8 @@ A [TeXmacs](https://texmacs.org/) plugin for running [GHCi](https://wiki.haskell
 ## Installing
 ### From release files
 
-The executable binaries are compiled with GHC 9.2.5. The Windows binary
-is considerably larger due to the lack of dynamic libraries in Windows
-Haskell distributions.
+The release archives contain statically linked files, which makes it
+possible to interact with different versions of GHCi.
 
 To install, uncompress the archive for your OS at `$TEXMACS_PATH/plugins/`
 (usually `/usr/share/TeXmacs/plugins/` in Linux,
@@ -18,21 +17,24 @@ Linux, `%UserProfile%\AppData\Roaming\TeXmacs\plugins\` in Windows.)
 
 `ghci` needs to be in the system `PATH` for the plugin to work.
 
-The plugin is rather simple -- mostly forwarding input and output -- and
+The plugin is rather simple -- mostly forwarding input and output.
 the resulting interaction and evaluation facilities are all TeXmacs's.
 
 ### Building and installing from source
 
-Building the plugin requires a _bash_-style shell and a Haskell [distribution](https://www.haskell.org/downloads/).
-In Windows, this means using [MSYS2](https://www.msys2.org/). Installing Haskell
-through [ghcup](https://www.haskell.org/ghcup/install/) allows setting up a
-MSYS2 directory (recommended) and installing the `mingw64` toolchain so that
+
+
+Building the plugin requires a _bash_-style shell and a Haskell
+distribution (GHC 9.2.5 or later.) In Windows, this means installing
+Haskell through [ghcup](https://www.haskell.org/ghcup/) and setting up
+an MSYS2 directory, then installing the development packages so that
 `make`, `strip` and other required utilities will be available.
 
-Installing is straightford. Just `cd` to the `ghci` folder and write:
-
+Installing is simple. Just `cd` to the `ghci` folder (inside `tm-ghci`)
+and write:
+```bash
     make deploy
-
+```
 Which takes care of compiling and installing the plug-in in the appropriate
 directory (`$TEXMACS_HOME_PATH/plugins`.)
 
@@ -43,25 +45,19 @@ system, so I'm unable to provide the respective version.
 
 ## Features and Limitations
 
-`tm_ghci` is _alpha_-stage software.
+`tm-ghci` is _alpha_-stage software.
 
 Presently, it's able to run a vanilla `ghci` session, i.e.,
 without project dependencies autoloaded as with `stack repl` or `cabal repl`.
 
-### Planned features
-
-The feature set is also a work in progress. I hope to add an importer for
-Haskell code (`*.hs`), though not one for Literate Haskell. TeXmacs already
-has a mechanism for importing LaTeX.
-
 
 ## Licensing
 
-`tm-ghci` is distributed under the [MIT License](https://mit-license.org/).
-See the [LICENSE.txt](./LICENSE.txt) file for details.
+`tm-ghci` is distributed under the
+[GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html) license.
 
 
-## Bug reports and such
+## Issues
 
 Send feedback to 10951848+<s>nope</s>CubOfJudahsLion äτ users.noreply.github.com.
 Bug reports must include the steps required to reproduce the error.
