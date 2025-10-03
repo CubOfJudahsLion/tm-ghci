@@ -1,8 +1,8 @@
-<span style="font-family: monospace; font-size: 16pt">tm-ghci &#x2237;
+<span style="font-family: monospace; font-size: 24pt">tm-ghci &#x2237;
 <img src="readme-src/haskell.png" width="24" height="24"> &#x2192;
 <img src="readme-src/texmacs.png" width="24" height="24"></span><br><br><br><br>
 A
-[<img src="readme-src/texmacs-text.png" width="36" height="9" alt="image" />](https://texmacs.org/)
+[<img src="readme-src/texmacs-text.png" width="44" height="11" alt="image" />](https://texmacs.org/)
 plugin for running
 [<span style="font-variant: small-caps">GHCi</span>](https://wiki.haskell.org/GHC/GHCi)
 sessions.
@@ -29,7 +29,7 @@ be in the system `PATH` for the plugin to work.
 
 The plugin is rather simple — mostly forwarding input and output. The
 resulting interaction and evaluation facilities are all
-<img src="readme-src/texmacs-text.png" width="36" height="9" alt="image" />’s.
+<img src="readme-src/texmacs-text.png" width="44" height="11" alt="image" />’s.
 
 ## Building and installing from source
 
