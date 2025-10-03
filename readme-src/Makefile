@@ -24,13 +24,13 @@ testvars:
 	@echo TARGETS    : $(TARGETS)
 
 $(TARGET_MD): $(SOURCES)
-	echo "<span style=\"font-family: monospace; font-size: 32pt\">tm-ghci &#x2237;
-		<img src=\"readme-src/haskell.png\" width=\"24\" height=\"24\"> &#x2192;
-		<img src=\"readme-src/texmacs.png\" width=\"24\" height=\"24\"></span><br><br><br><br>" \
-		> $@
+	echo "# <span style=\"font-family: monospace\">tm-ghci &#x2237; \
+	<img src=\"readme-src/haskell.png\" width=\"24\" height=\"24\"> &#x2192; \
+	<img src=\"readme-src/texmacs.png\" width=\"24\" height=\"24\"></span>" > $@
 	pandoc -f latex -t gfm $< | \
 	sed -r -e \
-	  '/\bspan\b/{
+	  '/^#/s/^(#+)/#\1/
+	  /\bspan\b/{
 	    s/<span class="smallcaps">/<span style="font-variant: small-caps">/g
 	    s/<span class="sans-serif">/<span style="font-family: serif">/g
 	  }

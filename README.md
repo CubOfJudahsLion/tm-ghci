@@ -1,15 +1,13 @@
-<span style="font-family: monospace; font-size: 32pt">tm-ghci &#x2237;
-<img src="readme-src/haskell.png" width="24" height="24"> &#x2192;
-<img src="readme-src/texmacs.png" width="24" height="24"></span><br><br><br><br>
+# <span style="font-family: monospace">tm-ghci &#x2237; <img src="readme-src/haskell.png" width="24" height="24"> &#x2192; <img src="readme-src/texmacs.png" width="24" height="24"></span>
 A
 [<img src="readme-src/texmacs-text.png" width="44" height="11" alt="image" />](https://texmacs.org/)
 plugin for running
 [<span style="font-variant: small-caps">GHCi</span>](https://wiki.haskell.org/GHC/GHCi)
 sessions.
 
-# Installing
+## Installing
 
-## From release files
+### From release files
 
 The release archives contain statically linked files, which makes it
 possible to interact with different versions of
@@ -31,7 +29,7 @@ The plugin is rather simple — mostly forwarding input and output. The
 resulting interaction and evaluation facilities are all
 <img src="readme-src/texmacs-text.png" width="44" height="11" alt="image" />’s.
 
-## Building and installing from source
+### Building and installing from source
 
 Building the plugin requires a `bash`-style shell and a
 <span style="font-variant: small-caps">Haskell</span> distribution
@@ -59,20 +57,20 @@ and <span style="font-variant: small-caps">Arch Linux</span>. I don’t own a
 <span style="font-variant: small-caps">MacOS</span> system, so I’m unable to provide
 the respective package.
 
-# Features and Limitations
+## Features and Limitations
 
 `tm-ghci` is *alpha*-stage software, distributed *as-is*.
 
 Presently, it’s able to run a vanilla `ghci` session, i.e., without
 project dependencies autoloaded as with `stack repl` or `cabal repl`.
 
-# Licensing
+## Licensing
 
 `tm-ghci` is distributed under the
 [<span style="font-variant: small-caps">GPL3</span>](https://www.gnu.org/licenses/gpl-3.0.en.html)
 license.
 
-# Issues
+## Issues
 
 Please [submit an
 issue](https://github.com/CubOfJudahsLion/tm-ghci/issues) if you find
@@ -81,7 +79,7 @@ one. Bug reports must include the steps required to reproduce the error.
 You can also send any feedback to *10951848+~~nope~~CubOfJudahsLion*
 ä$`\tau`$ *users.noreply.github.com*.
 
-# Thanks to
+## Thanks to
 
 - *The TeXmacs developers* for giving us such a great tool.
 
