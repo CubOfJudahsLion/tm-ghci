@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage{parskip,graphicx,hyperref,xcolor,ulem}
+
+\newcommand{\TeXmacs}{\includegraphics[width=1.1cm,height=0.25cm]{texmacs-text.png}}
+\renewcommand{\emph}[1]{\textit{#1}}
+
+\begin{document}
+
+\title{\texttt{tm-ghci\ $::$\ }
+  \raisebox{0.0\height}{\includegraphics[width=0.5cm,height=0.5cm]{haskell.png}}
+  $\mathtt{\rightarrow}$\ 
+  \raisebox{0.0\height}{\includegraphics[width=0.5cm,height=0.5cm]{texmacs.png}}}
+
+\author{}
+\date{}
+
+\maketitle
+
+A \href{https://texmacs.org/}{\TeXmacs} plugin for running
+\href{https://wiki.haskell.org/GHC/GHCi}{\textsc{GHCi}} sessions.
+
+\section{Installing}
+
+\subsection{From release files}
+
+The release archives contain statically linked files, which makes it possible
+to interact with different versions of {\textsc{GHCi}}.
+
+To install, uncompress the archive for your \textsc{OS} at
+\texttt{\$TEXMACS\_PATH/plugins/}  (usually
+\texttt{/usr/share/TeXmacs/plugins/}  in  \textsc{Linux},
+\emph{\textless\textsf{TeXmacs-install-dir}\textgreater}\texttt{\textbackslash
+plugins\textbackslash} in \textsc{Windows}) or
+\texttt{\$TEXMACS\_HOME\_PATH/plugins/}
+(\texttt{\$HOME/.TeXmacs/plugins/} in \textsc{Linux} or
+\texttt{\%UserProfile\%\textbackslash AppData\textbackslash
+Roaming\textbackslash TeXmacs\textbackslash plugins\textbackslash} in
+\textsc{Windows}.)
+
+\texttt{ghci} needs to be in the system \texttt{PATH} for the plugin
+to work.
+
+The plugin is rather simple --- mostly forwarding input and output. The
+resulting interaction and evaluation facilities are all {\TeXmacs}'s.
+
+\subsection{Building and installing from source}
+
+Building the plugin requires a \texttt{bash}-style shell and a
+{\textsc{Haskell}} distribution ({\textsc{GHC}} 9.2.5 or later.) In
+{\textsc{Windows}}, this means installing {\textsc{Haskell}} through
+{\textsc{\href{https://www.haskell.org/ghcup/}{GHCup}}} and setting up an
+{\textsc{Msys2}} directory, then installing the development packages so that
+\texttt{make}, \texttt{strip} and other required utilities will be
+available.
+
+Installing is simple. In your shell prompt, just \texttt{cd} to
+the \texttt{ghci} folder and type:
+
+\texttt{make deploy}
+
+Which takes care of compiling and installing the plug-in in the appropriate
+directory (\texttt{\$TEXMACS\_HOME\_PATH/plugins}.)
+
+While this should be sufficient, this software is still in alpha phase, and
+it's only been tested in {\textsc{Windows}} 10 and {\textsc{Arch Linux}}. I
+don't own a {\textsc{MacOS}} system, so I'm unable to provide the respective
+package.
+
+\section{Features and Limitations}
+
+\texttt{tm-ghci} is {\emph{alpha}}-stage software, distributed
+{\emph{as-is}}.
+
+Presently, it's able to run a vanilla \texttt{ghci} session, i.e., without
+project dependencies autoloaded as with \texttt{stack repl} or
+\texttt{cabal repl}.
+
+\section{Licensing}
+
+\texttt{tm-ghci} is distributed under the
+\href{https://www.gnu.org/licenses/gpl-3.0.en.html}{\textsc{GPL3}}
+license.
+
+\section{Issues}
+
+Please \href{https://github.com/CubOfJudahsLion/tm-ghci/issues}{submit an
+issue} if you find one. Bug reports must include the steps required to
+reproduce the error.
+
+You can also send any feedback to
+\emph{10951848+\sout{nope}CubOfJudahsLion} {\"a}{$\tau$}
+\emph{users.noreply.github.com}.
+
+\section{Thanks to}
+
+\begin{itemize}
+  \item {\emph{The TeXmacs developers}} for giving us such a magnificent tool.
+  \item {\emph{Massimiliano Gubinelli}} for setting me straight on the help
+  file mechanism for plug-ins.
+\end{itemize}
+
+\end{document}
