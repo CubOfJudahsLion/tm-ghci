@@ -1,4 +1,4 @@
-# <span style="font-family: monospace">tm-ghci &#x2237; <img src="readme-src/haskell.png" width="24" height="24"> &#x2192; <img src="readme-src/texmacs.png" width="24" height="24"></span>
+# <span style="font-family: monospace">tm-ghci &#x2237; <img src="readme-src/haskell.png" width="32" height="32"> &#x2192; <img src="readme-src/texmacs.png" width="32" height="32"></span>
 A
 [<img src="readme-src/texmacs-text.png" width="44" height="11" alt="image" />](https://texmacs.org/)
 plugin for running

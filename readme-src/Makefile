@@ -25,8 +25,8 @@ testvars:
 
 $(TARGET_MD): $(SOURCES)
 	echo "# <span style=\"font-family: monospace\">tm-ghci &#x2237; \
-	<img src=\"readme-src/haskell.png\" width=\"24\" height=\"24\"> &#x2192; \
-	<img src=\"readme-src/texmacs.png\" width=\"24\" height=\"24\"></span>" > $@
+	<img src=\"readme-src/haskell.png\" width=\"32\" height=\"32\"> &#x2192; \
+	<img src=\"readme-src/texmacs.png\" width=\"32\" height=\"32\"></span>" > $@
 	pandoc -f latex -t gfm $< | \
 	sed -r -e \
 	  '/^#/s/^(#+)/#\1/
