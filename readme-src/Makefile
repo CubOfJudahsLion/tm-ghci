@@ -2,13 +2,14 @@
 
 DOC_SOURCE := README.tex
 IMG_SOURCES := haskell.png texmacs.png texmacs-text.png
-SOURCES := $(DOC_SOURCE) $(IMG_SOURCES)
+MAKE_SOURCES := Makefile
+SOURCES := $(DOC_SOURCE) $(IMG_SOURCES) $(MAKE_SOURCES)
 
 TARGET_MD := ../README.md
 TARGET_PDF := ../README.pdf
 TARGETS := $(TARGET_MD) $(TARGET_PDF)
 
-.PHONY: docs,clean,cleanall
+.PHONY: docs clean cleanall testvars
 
 .ONESHELL:
 
@@ -23,6 +24,10 @@ testvars:
 	@echo TARGETS    : $(TARGETS)
 
 $(TARGET_MD): $(SOURCES)
+	echo "<span style=\"font-family: monospace; font-size: 16pt\">tm-ghci &#x2237;
+		<img src=\"readme-src/haskell.png\" width=\"24\" height=\"24\"> &#x2192;
+		<img src=\"readme-src/texmacs.png\" width=\"24\" height=\"24\"></span><br><br><br><br>" \
+		> $@
 	pandoc -f latex -t gfm $< | \
 	sed -r -e \
 	  '/\bspan\b/{
@@ -31,7 +36,7 @@ $(TARGET_MD): $(SOURCES)
 	  }
 	  /<img src=/s/"([^.]+\.png)"/"readme-src\/\1"/g
 	  /`make deploy`/s/^.*$$/```shell\n    make deploy\n```/' \
-	> $@
+	>> $@
 
 $(TARGET_PDF): $(SOURCES)
 	pdflatex $<

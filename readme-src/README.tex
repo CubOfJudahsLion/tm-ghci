@@ -1,15 +1,15 @@
 \documentclass{article}
 \usepackage{parskip,graphicx,hyperref,xcolor,ulem}
 
-\newcommand{\TeXmacs}{\includegraphics[width=1.1cm,height=0.25cm]{texmacs-text.png}}
+\newcommand{\TeXmacs}{\includegraphics[width=36px,height=9px]{texmacs-text.png}}
 \renewcommand{\emph}[1]{\textit{#1}}
 
 \begin{document}
 
 \title{\texttt{tm-ghci\ $::$\ }
-  \raisebox{0.0\height}{\includegraphics[width=0.5cm,height=0.5cm]{haskell.png}}
+  \includegraphics[width=18px,height=16px]{haskell.png}
   $\mathtt{\rightarrow}$\ 
-  \raisebox{0.0\height}{\includegraphics[width=0.5cm,height=0.5cm]{texmacs.png}}}
+  \includegraphics[width=18px,height=16px]{texmacs.png}}
 
 \author{}
 \date{}
@@ -37,8 +37,8 @@ plugins\textbackslash} in \textsc{Windows}) or
 Roaming\textbackslash TeXmacs\textbackslash plugins\textbackslash} in
 \textsc{Windows}.)
 
-\texttt{ghci} needs to be in the system \texttt{PATH} for the plugin
-to work.
+\texttt{ghci} (or \texttt{ghci.bin} or \texttt{ghci.exe}, depending
+on your system) needs to be in the system \texttt{PATH} for the plugin to work.
 
 The plugin is rather simple --- mostly forwarding input and output. The
 resulting interaction and evaluation facilities are all {\TeXmacs}'s.
@@ -94,7 +94,7 @@ You can also send any feedback to
 \section{Thanks to}
 
 \begin{itemize}
-  \item {\emph{The TeXmacs developers}} for giving us such a magnificent tool.
+  \item {\emph{The TeXmacs developers}} for giving us such a great tool.
   \item {\emph{Massimiliano Gubinelli}} for setting me straight on the help
   file mechanism for plug-ins.
 \end{itemize}

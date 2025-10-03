@@ -1,5 +1,9 @@
-A [<img src="readme-src/texmacs-text.png" style="width:1.1cm;height:0.25cm"
-alt="image" />](https://texmacs.org/) plugin for running
+<span style="font-family: monospace; font-size: 16pt">tm-ghci &#x2237;
+<img src="readme-src/haskell.png" width="24" height="24"> &#x2192;
+<img src="readme-src/texmacs.png" width="24" height="24"></span><br><br><br><br>
+A
+[<img src="readme-src/texmacs-text.png" width="36" height="9" alt="image" />](https://texmacs.org/)
+plugin for running
 [<span style="font-variant: small-caps">GHCi</span>](https://wiki.haskell.org/GHC/GHCi)
 sessions.
 
@@ -20,12 +24,12 @@ To install, uncompress the archive for your
 `%UserProfile%\AppData\ Roaming\TeXmacs\plugins\` in
 <span style="font-variant: small-caps">Windows</span>.)
 
-`ghci` needs to be in the system `PATH` for the plugin to work.
+`ghci` (or `ghci.bin` or `ghci.exe`, depending on your system) needs to
+be in the system `PATH` for the plugin to work.
 
 The plugin is rather simple — mostly forwarding input and output. The
 resulting interaction and evaluation facilities are all
-<img src="readme-src/texmacs-text.png" style="width:1.1cm;height:0.25cm"
-alt="image" />’s.
+<img src="readme-src/texmacs-text.png" width="36" height="9" alt="image" />’s.
 
 ## Building and installing from source
 
@@ -79,7 +83,7 @@ You can also send any feedback to *10951848+~~nope~~CubOfJudahsLion*
 
 # Thanks to
 
-- *The TeXmacs developers* for giving us such a magnificent tool.
+- *The TeXmacs developers* for giving us such a great tool.
 
 - *Massimiliano Gubinelli* for setting me straight on the help file
   mechanism for plug-ins.
