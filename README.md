@@ -1,4 +1,4 @@
-<span style="font-family: monospace; font-size: 24pt">tm-ghci &#x2237;
+<span style="font-family: monospace; font-size: 32pt">tm-ghci &#x2237;
 <img src="readme-src/haskell.png" width="24" height="24"> &#x2192;
 <img src="readme-src/texmacs.png" width="24" height="24"></span><br><br><br><br>
 A
