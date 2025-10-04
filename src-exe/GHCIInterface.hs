@@ -1,8 +1,8 @@
 {- |
     Module      : Main
     Description : A simple GHCi plugin for TeXmacs
-    Copyright   : © Alexander Feterman-Naranjo, 2023
-    License     : MIT
+    Copyright   : © Alexander Feterman-Naranjo, 2023-2025
+    License     : GPL-3
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
@@ -13,20 +13,23 @@
     allowing customizations to be seen in /TeXmacs/.
 -}
 
-
 module Main where
 
 
-import Control.Concurrent (threadDelay)
-import Control.Monad (forM_)
-import Data.Char (chr, isSpace)
-import System.Exit (die)
-import System.IO  ( Handle, stdin, stdout
-                  , hReady, hWaitForInput, hIsClosed
-                  , hGetChar, hPutStrLn
-                  , BufferMode(NoBuffering), hSetBuffering
+import Control.Concurrent ( threadDelay )
+import Control.Monad ( forM_ )
+import Data.Char ( chr, isSpace )
+import System.Exit ( die )
+import System.IO  ( BufferMode(NoBuffering), Handle
+                  , hGetChar
+                  , hIsClosed
+                  , hPutStrLn
+                  , hReady
+                  , hSetBuffering
+                  , hWaitForInput
+                  , stdin, stdout
                   )
-import System.Process (proc, CreateProcess(..), StdStream(CreatePipe), withCreateProcess)
+import System.Process ( proc, CreateProcess(..), StdStream(CreatePipe), withCreateProcess )
 
 
 -- |  The characters acting as brackets for every data block for TeXmacs.

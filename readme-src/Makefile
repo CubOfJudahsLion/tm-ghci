@@ -9,19 +9,19 @@ TARGET_MD := ../README.md
 TARGET_PDF := ../README.pdf
 TARGETS := $(TARGET_MD) $(TARGET_PDF)
 
-.PHONY: docs clean cleanall testvars
+.PHONY: docs clean cleanall vartest
 
 .ONESHELL:
 
 docs: $(TARGETS)
 
-testvars:
-	@echo DOC_SOURCE : $(DOC_SOURCE)
-	@echo IMG_SOURCES: $(IMG_SOURCES)
-	@echo SOURCES    : $(SOURCES)
-	@echo TARGET_MD  : $(TARGET_MD)
-	@echo TARGET_PDF : $(TARGET_PDF)
-	@echo TARGETS    : $(TARGETS)
+vartest:
+	@echo $$'\e[1;36mDOC_SOURCE :\e[0m' $(DOC_SOURCE)
+	@echo $$'\e[1;36mIMG_SOURCES:\e[0m' $(IMG_SOURCES)
+	@echo $$'\e[1;36mSOURCES    :\e[0m' $(SOURCES)
+	@echo $$'\e[1;36mTARGET_MD  :\e[0m' $(TARGET_MD)
+	@echo $$'\e[1;36mTARGET_PDF :\e[0m' $(TARGET_PDF)
+	@echo $$'\e[1;36mTARGETS    :\e[0m' $(TARGETS)
 
 $(TARGET_MD): $(SOURCES)
 	echo "# <span style=\"font-family: monospace\">tm-ghci &#x2237; \
