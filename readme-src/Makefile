@@ -47,7 +47,7 @@ $(TARGET_PDF): $(SOURCES)
 	mv $(shell basename $@) $@
 
 clean:
-	find . \( -iname \*.out -o -iname \*.log -o -iname *.aux \) -delete
+	rm -f *.out *.log *.aux
 
 cleanall: clean
 	rm -f $(TARGETS)

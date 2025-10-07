@@ -9,15 +9,17 @@ Portability : POSIX
 -}
 
 
-module Language.Haskell.LexemeTypes
-  ( LexemeType
-  , keywords
-  , languagePunctuation
-  )
-  where
+{-# LANGUAGE OverloadedStrings #-}
+module Language.Haskell.Lexer.BuiltIns
+  ( keywords
+  , operatorCharacters
+  , punctuationCharacters
+  , reservedOperators
+  ) where
 
 
 import Data.List ( sort, uncons )
+import Data.Text ( Text )
 import Data.Vector.Strict ( Vector, unfoldr )
 
 
@@ -25,9 +27,12 @@ import Data.Vector.Strict ( Vector, unfoldr )
 -- Lists used for construction
 ----------------------------------------
 
+--  The following are lists of string 
+
 --  List of keywords, pre-sorted.
-keywordsList :: [String]
-keywordsList = sort [ "_"           -- Unbound pattern match
+keywordsList :: [Text]
+keywordsList = sort [ "_"           -- Pattern wildcard
+                    , "anyclass"
                     , "as"
                     , "case"
                     , "class"
@@ -51,37 +56,53 @@ keywordsList = sort [ "_"           -- Unbound pattern match
                     , "module"
                     , "newtype"
                     , "of"
+                    , "pattern"
                     , "proc"
                     , "qualified"
                     , "rec"
+                    , "static"
+                    , "stock"
                     , "then"
                     , "type"
+                    , "via"
                     , "where"
+                    , "∀"         -- Unicode symbol for "forall"
                     ]
 
---  Lists symbols that form part of the language, pre-sorted.
-languagePunctuationList :: [String]
-languagePunctuationList = sort [ "!"        -- Bang pattern
-                               , "#"        -- Unboxed types
-                               , "("        -- Start subexpression
-                               , ")"        -- End subexpression
-                               , ","        -- Open parens
-                               , "->"       -- Returns type
-                               , "::"       -- Has type
-                               , ";"        -- Separator inside braces
-                               , "<-"       -- do-notation binding
-                               , "=>"       -- Constraint application
-                               , "?"        -- Type hole
-                               , "@"        -- Whole-to-parts pattern matching, type application
-                               , "["        -- Start list
-                               , "[|"       -- Quotation start
-                               , "]"        -- End list
-                               , "{"        -- Free layout starter
-                               , "|"        -- Alternative separator
-                               , "|]"       -- Quotation end
-                               , "}"        -- Free layout ender
-                               , "~"        -- Type equality, irrefutable pattern matching
-                               ]
+--  List of reserved operators, pre-sorted. No punctuation is figures here.
+reservedOperatorsList :: [Text]
+reservedOperatorsList = sort  [ "!"         -- Bang pattern (strict annotation)
+                              , "#"         -- Unboxed type / Label
+                              , "->"        -- Returns type / Case match result
+                              , ".."        -- Range operator / All constructors (of a type in import lists)
+                              , ":"         -- List head:rest pattern
+                              , "::"        -- Has type
+                              , "<-"        -- do-notation binding
+                              , "="         -- Equational equality
+                              , "=>"        -- Constraint application
+                              , "?"         -- Type hole
+                              , "@"         -- Whole-to-parts pattern matching / Type application
+                              , "\\"        -- Lambda abstraction
+                              , "|"         -- Data constructor separator / Guards / MultiWayIf alternatives / Functional dependencies / Unboxed sum
+                              , "~"         -- Type equality / Lazy annotation
+                              -- Unicode variants --
+                              , "λ"         -- U03BB
+                              , "←"         -- U2190
+                              , "→"         -- U2192
+                              , "⇒"         -- U21D2
+                              , "∷"         -- U2237
+                              ]
+
+
+--  These are character classes as lists
+
+--  Characters that can be used to construct operator names
+operatorCharactersList :: [Char]
+operatorCharactersList = sort ['!', '#', '$', '%', '&', '⋆', '+', '.', '/', '<', '=', '>', '?', '@', '\\', '^', '|', '-', '~', ':']
+
+--  Punctuation ("special") characters
+punctuationCharactersList :: [Char]
+punctuationCharactersList = sort ['(', ')', ',', ';', '[', ']', '`', '{', '}', '⦇', '⦈', '⟦', '⟧']
 
 
 ----------------------------------------
@@ -89,11 +110,19 @@ languagePunctuationList = sort [ "!"        -- Bang pattern
 --  ready for binary search.
 ----------------------------------------
 
--- |  Vector containing all Haskell keywords, pre-sorted.
-keywords :: Vector String
+-- |  'Vector' containing all /Haskell/ keywords, pre-sorted.
+keywords :: Vector Text
 keywords = unfoldr uncons keywordsList
 
--- | Vector with symbols that form part of the language, pre-sorted. These can't be used as operators.
-languagePunctuation :: Vector String
-languagePunctuation = unfoldr uncons languagePunctuationList
+-- |  Vector containing all the reserved operators, pre-sorted.
+reservedOperators :: Vector Text
+reservedOperators = unfoldr uncons reservedOperatorsList
+
+-- |  Vector with ASCII characters that can be used in operator names.
+operatorCharacters :: Vector Char
+operatorCharacters = unfoldr uncons operatorCharactersList
+
+-- |  Vector with characters (all Unicode) that can be used as puncuation.
+punctuationCharacters :: Vector Char
+punctuationCharacters = unfoldr uncons punctuationCharactersList
 
