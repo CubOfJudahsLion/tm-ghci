@@ -1,4 +1,4 @@
-<TeXmacs|2.1.1>
+<TeXmacs|2.1.2>
 
 <style|tmdoc>
 
@@ -13,10 +13,10 @@
     <branch|Contact|ghci-contact.en.tm>
   </traverse>
 
-  <tmdoc-copyright|2023|Alexander Feterman-Naranjo>
+  <tmdoc-copyright|2023-25|Alexander Feterman-Naranjo>
 
-  <tmdoc-license|Distributed under the <hlink|MIT
-  License|https://mit-license.org/>.>
+  <tmdoc-license|Distributed under the <hlink|GPL3
+  License|https://www.gnu.org/licenses/gpl-3.0.en.html>.>
 </body>
 
 <\initial>
@@ -25,6 +25,6 @@
     <associate|page-medium|paper>
     <associate|page-type|letter>
     <associate|page-width|auto>
-    <associate|preamble|false>
+    <associate|preamble|true>
   </collection>
 </initial>

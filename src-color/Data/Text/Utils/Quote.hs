@@ -19,4 +19,4 @@ import Data.Text ( Text, append, replace )
 -- |  Quotes any string. Inside quotes and backslashes are preceded with a backslash.
 quoteText :: Text -> Text
 quoteText = flip append "\"" . append "\"" . replace "\"" "\\\"" . replace "\\" "\\\\"
-  
+

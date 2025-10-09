@@ -25,13 +25,13 @@ PLUGIN_SUBDIRS			:= $(BIN_DIR) $(DOC_DIR) $(SCHEME_DIR)
 ifneq ("$(USERPROFILE)","") # Windows variables
 	PROFILE_PLUGINS_DIR	:= $(USERPROFILE)\\AppData\\Roaming\\TeXmacs\\plugins\\
 	RELEASE_FILE		:= $(RELEASE_FILE_NO_EXT).zip
-	PACK_CMD		:= zip -q9 $(RELEASE_FILE)
+	PACK_CMD		:= zip -q9 $(RELEASE_FILE) $(PLUGIN_DIR)
 	PLUGIN_SUBDIRS_DIRSEP	:= $(foreach subdir,$(PLUGIN_SUBDIRS), $(subst /,\\, $(source))
 else # Un*x variables
 	PROFILE_PLUGINS_DIR	:= $(HOME)/.TeXmacs/plugins/
 	BIN_EXT			:= .bin
 	RELEASE_FILE		:= $(RELEASE_FILE_NO_EXT).tar.xz
-	PACK_CMD		:= tar -cJf $(RELEASE_FILE)
+	PACK_CMD		:= tar -cJf $(RELEASE_FILE) $(PLUGIN_DIR)
 	PLUGIN_SUBDIRS_DIRSEP	:= $(PLUGIN_SUBDIRS)
 endif
 
@@ -77,8 +77,11 @@ $(DEPLOY_TARGETS): $(DEPLOY_SOURCES)
 
 deploy: $(DEPLOY_TARGETS)
 
-release:
-	@echo Not implemented yet
+$(RELEASE_FILE): $(DEPLOY_SOURCES)
+	@echo $$'\e[1;36m::\e[0m Creating compressed archive'
+	$(PACK_CMD)
+
+release: $(RELEASE_FILE)
 
 clean:
 	@echo $$'\e[1;36m::\e[0m Cleaning up temp files'
