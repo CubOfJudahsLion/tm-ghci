@@ -11,10 +11,10 @@ TM_CMD := /opt/TeXmacs/TeXmacs-2.1.5-x86_64.AppImage
 
 DOLLAR := $$
 
-../../README.md: README.tex
+../README.md: README.tex
 	pandoc -r latex -w gfm $< -o $@
 	sed -r -e 's/<\/?span\b[^>]*>//g'\
-	       -e 's/^(`tm-ghci`[[:space:]]*::[[:space:]]*).*${DOLLAR}/<span style="font-size: 20pt">\1![Haskell](img\/haskell.png) \&rarr; ![TeXmacs](img\/texmacs.png)<\/span>/'\
+	       -e 's/^(`tm-ghci`[[:space:]]*::[[:space:]]*).*${DOLLAR}/<span style="font-size: 32px">\1![Haskell](img\/haskell.png) \&rarr; ![TeXmacs](img\/texmacs.png)<\/span>/'\
 	    -i $@
 
 README.tex: README.tm
@@ -35,8 +35,8 @@ README.tex: README.tm
 	    -i $@
 
 clean:
-	-rm README.{aux,log,out,tex,tm\~}
+	-rm README*.{aux,log,out,tex,pdf,tm\~}
 
 cleanall: clean
-	-rm ../../README.md
+	-rm ../README.md
 

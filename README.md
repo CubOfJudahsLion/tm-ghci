@@ -1,4 +1,4 @@
-<span style="font-size: 20pt">`tm-ghci` :: ![Haskell](img/haskell.png) &rarr; ![TeXmacs](img/texmacs.png)</span>
+<span style="font-size: 32px">`tm-ghci` :: ![Haskell](img/haskell.png) &rarr; ![TeXmacs](img/texmacs.png)</span>
 
 A [TeXmacs](https://texmacs.org) plugin for running
 [GHCi](https://wiki.haskell.org/index.php?title=GHC/GHCi)

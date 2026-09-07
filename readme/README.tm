@@ -4,10 +4,10 @@
 
 <\body>
   <with|font-base-size|20|<center|<verbatim|tm-ghci> ::
-  <image|../../img/haskell.png|16pt|16pt||> <math|\<rightarrow\>>
-  <image|../../img/texmacs.png|16pt|16pt||>>>
+  <image|../img/haskell.png||20pt||> <math|\<rightarrow\>>
+  <image|../img/texmacs.png||20pt||>>>
 
-  <center|A <hlink|<TeXmacs>|https://texmacs.org> plugin for running
+  <center|A <hlink|<TeXmacs>|https://texmacs.org/> plugin for running
   <hlink|<name|GHCi>|https://wiki.haskell.org/index.php?title=GHC/GHCi>
   sessions.>
 

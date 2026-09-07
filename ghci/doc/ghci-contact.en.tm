@@ -1,4 +1,4 @@
-<TeXmacs|2.1.1>
+<TeXmacs|2.1.5>
 
 <style|tmdoc>
 
@@ -6,10 +6,9 @@
   <tmdoc-title|Contact>
 
   <\itemize>
-    <item>Email: <verbatim|10951848+CubOfJudahsLion ä\<tau\>
-    users.noreply.github.com>.
-
-    <item>Bug reports must include the steps required to reproduce the error.
+    <item>Submit any bug reports to the <hlink|issues
+    page|https://github.com/CubOfJudahsLion/tm-ghci/issues>. All reports must
+    include the steps required to reproduce the error.
 
     <item><name|GitHub> repo: <hlink|CubOfJudahsLion/tm-ghci|https://github.com/CubOfJudahsLion/tm-ghci>.
   </itemize>

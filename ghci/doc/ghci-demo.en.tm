@@ -1,4 +1,4 @@
-<TeXmacs|2.1.1>
+<TeXmacs|2.1.5>
 
 <style|tmdoc>
 
@@ -10,19 +10,19 @@
 
   <\session|ghci|default>
     <\output>
-      GHCi, version 9.2.5: https://www.haskell.org/ghc/ \ :? for help
+      GHCi, version 9.10.3: https://www.haskell.org/ghc/ \ :? for help
     </output>
 
     <\unfolded-io>
       ghci\<gtr\>\ 
     <|unfolded-io>
-      putStrLn "Hello, TeXmacs!"
+      putStrLn "Hello from TeXmacs"
     <|unfolded-io>
-      Hello, TeXmacs!
+      Hello from TeXmacs
     </unfolded-io>
 
     <\input>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|input>
       :{
     </input>
@@ -30,37 +30,19 @@
     <\input>
       ghci\|\ 
     <|input>
-      powerSet :: [t] -\<gtr\> [[t]]
+      powerset :: [a] -\<gtr\> [[a]]
     </input>
 
     <\input>
       ghci\|\ 
     <|input>
-      powerSet l = ps [[]] l
+      powerset [] = [[]]
     </input>
 
     <\input>
       ghci\|\ 
     <|input>
-      \ \ where
-    </input>
-
-    <\input>
-      ghci\|\ 
-    <|input>
-      \ \ \ \ ps :: [[t]] -\<gtr\> [t] -\<gtr\> [[t]]
-    </input>
-
-    <\input>
-      ghci\|\ 
-    <|input>
-      \ \ \ \ ps acc [] = acc
-    </input>
-
-    <\input>
-      ghci\|\ 
-    <|input>
-      \ \ \ \ ps acc (x:xs) = ps (acc ++ fmap (x:) acc) xs
+      powerset (x:xs) = let pset = powerset xs in fmap (x:) pset ++ pset
     </input>
 
     <\input>
@@ -70,15 +52,15 @@
     </input>
 
     <\unfolded-io>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|unfolded-io>
-      powerSet [1,2,3,4]
+      powerset [1,2,3,4]
     <|unfolded-io>
-      [[],[1],[2],[2,1],[3],[3,1],[3,2],[3,2,1],[4],[4,1],[4,2],[4,2,1],[4,3],[4,3,1],[4,3,2],[4,3,2,1]]
+      [[1,2,3,4],[1,2,3],[1,2,4],[1,2],[1,3,4],[1,3],[1,4],[1],[2,3,4],[2,3],[2,4],[2],[3,4],[3],[4],[]]
     </unfolded-io>
 
     <\input>
-      \<lambda\>\<gtr\>\ 
+      ghci\<gtr\>\ 
     <|input>
       \;
     </input>
@@ -96,8 +78,8 @@
   <menu|Insert|Fold|Executable|GHCi>. Here it's used to calculate the
   <em|machine epsilon> for the <verbatim|Float> type:
 
-  <script-input|ghci|default|head $ take 1 $ dropWhile ((/= 0) . (/ 2)) $
-  iterate (/ 2) (1 :: Float)|1.0e-45>
+  <script-input|ghci|default|let h = \\x-\<gtr\> let x'=x/2 in if x'==0 then
+  x else h x' in h (1::Float)|1.0e-45>
 
   Place the cursor inside the light-yellow text box above and hit
   <key|Enter>. After a moment, it produces the desired result. Hit
@@ -108,5 +90,6 @@
 <\initial>
   <\collection>
     <associate|page-medium|paper>
+    <associate|preamble|false>
   </collection>
 </initial>

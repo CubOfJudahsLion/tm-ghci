@@ -1,0 +1,12 @@
+!_TAG_FILE_SORTED	1	//
+ControlCharacters	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs	13;"	m
+Main	/home/alex/Projects/tm-ghci/ghci-interface/src/Main.hs	17;"	m
+MessageFormatting	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs	15;"	m
+dataBegin	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs	16;"	f
+dataEnd	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs	16;"	f
+dataEscape	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs	16;"	f
+escapeString	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs	23;"	f
+main	/home/alex/Projects/tm-ghci/ghci-interface/src/Main.hs	136;"	f
+mainLoop	/home/alex/Projects/tm-ghci/ghci-interface/src/Main.hs	73;"	f
+tmWrap	/home/alex/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs	34;"	f
+waitReadable	/home/alex/Projects/tm-ghci/ghci-interface/src/Main.hs	35;"	f

@@ -1,7 +1,7 @@
 # Scripts for building, packing release files and installing the plugin.
 # The included scripts work for Linux, FreeBSD and MSYS2 (Windows.)
 #   In FreeBSD, use 'gmake' instead of 'make' (which is actually pmake.)
-# Requirements: ghc 9.10.3+, git, xz/zip (if on Linux/Windows respectively),
+# Requirements: ghc 9.10.3+, git, zip/xz (if on Windows/Un*x respectively),
 #   strip and some standard utilities (awk, sed, tar, printf.)
 
 
@@ -17,6 +17,7 @@ OS			:= $(shell uname -so | sed -re 's/ /\n/g' | awk '/^[A-Za-z]+$$/{print tolow
 VERSION			:= $(shell git tag -l "v*" | tail -n 1 | awk '{print tolower($$0)}')
 
 # MSys is required to build, but it's not required to run a Windows executable
+# so we give it the proper OS name to avoid confusions
 ifeq ("$(OS)","msys")
 	OS := win32
 endif
@@ -29,28 +30,33 @@ RELEASE_FILE_NO_EXT	:= tm-ghci.$(ARCH).$(OS).$(VERSION)
 PLUGIN_DIR		:= ghci
 
 
-## Choose some values appropiate for the OS
+## Choose some values appropiate for the OS. POSIX defaults:
 EXE_EXT 		:= .bin
 TEXMACS_PLUGIN_DIR	:= $(HOME)/.TeXmacs/plugins
 PIE			:= -fPIE
 RELEASE_FILE		:= $(RELEASE_FILE_NO_EXT).tar.xz
 PACK_CMD		:= tar -cJf $(RELEASE_FILE) $(PLUGIN_DIR)
 
-# Windows versions
+# Windows:
 ifeq ("$(OS)","win32")
 	EXE_EXT			:= .exe
 	TEXMACS_PLUGIN_DIR	:= $(HOME)/AppData/Roaming/TeXmacs/plugins
-	PIE			:= # Windows has no support for position-independent code
+	PIE			:=	# Windows has no support for position-independent code
 	RELEASE_FILE		:= $(RELEASE_FILE_NO_EXT).zip
 	PACK_CMD		:= zip -qr9 $(RELEASE_FILE) $(PLUGIN_DIR)
 endif
 
 
 ## Distribution files
+
 # Variables for compilation and executable deployment
 BASE_NAME		:= GHCIInterface
-SOURCE_DIR		:= src/ghci-interface
-SOURCE_FILE		:= $(SOURCE_DIR)/$(BASE_NAME).hs
+PROJECT_DIR		:= ghci-interface
+SOURCE_SUBDIR		:= src
+SOURCE_DIR		:= $(PROJECT_DIR)/$(SOURCE_SUBDIR)
+SOURCE_FILES		:= $(shell find $(PROJECT_DIR) -iname \*.hs -o \
+			                               -path $(PROJECT_DIR)/$(BASE_NAME).cabal -o \
+			                               -regex '$(PROJECT_DIR)/\(package\|stack\)\.yaml')
 EXE_NAME		:= $(BASE_NAME)$(EXE_EXT)
 EXE_SUBDIR		:= bin
 EXE_DIR			:= $(PLUGIN_DIR)/$(EXE_SUBDIR)
@@ -74,33 +80,35 @@ TARGET_FILES		:= $(foreach dist_file,$(DIST_FILES),$(TEXMACS_PLUGIN_DIR)/$(dist_
 
 
 ## Some ANSI code helpers
-ANSI_START		:= [
+
+# Codes
+ANSI_START		:= \x1B[
 ANSI_BOLD		:= $(ANSI_START)1m
 ANSI_RESET		:= $(ANSI_START)0m
 ANSI_YELLOW		:= $(ANSI_START)33m
 ANSI_CYAN		:= $(ANSI_START)36m
 ANSI_BLUE		:= $(ANSI_START)34m
 
-# A macro for printing help statements (uses ANSI codes but resets at the end of every line.)
+# Prints justified help statements (uses ANSI codes but resets at the end of every line.)
 define help-line =
   @printf "  - $(ANSI_YELLOW)$(MAKE) $(ANSI_BOLD)%-8s $(ANSI_RESET)to %s$(ANSI_RESET)\n" "$(1)" "$(2)"
 endef
 
-# Macro for variable debugging (ANSI, resets.)
+# Dumps a variable formatted as "name = value" (justified, ANSI, resets.)
 define dump-var =
   @printf "$(ANSI_YELLOW)%-20s$(ANSI_RESET) = $(ANSI_CYAN)%s$(ANSI_RESET)\n" "$(1)" "$($(1))"
 endef
 
-# Print a header action (ANSI, resets.)
+# Print a header action (justified, ANSI, resets.)
 define action-header =
-  @echo "$(ANSI_BOLD)$(ANSI_YELLOW):: $(ANSI_BLUE)$(1)$(ANSI_RESET)"
+  @printf "$(ANSI_BOLD)$(ANSI_YELLOW):: $(ANSI_BLUE)%s$(ANSI_RESET)\n" "$(1)"
 endef
 
 
 ## First (default) target just shows help
 help:
 	@echo Run:
-	$(call help-line,compile ,create executable $(ANSI_CYAN)$(EXE_FILE)$(ANSI_RESET) -- implied by $(ANSI_YELLOW)deploy$(ANSI_RESET) and $(ANSI_YELLOW)release)
+	$(call help-line,compile,create executable $(ANSI_CYAN)$(EXE_FILE)$(ANSI_RESET) -- implied by $(ANSI_YELLOW)deploy$(ANSI_RESET) and $(ANSI_YELLOW)release)
 	$(call help-line,plug   ,install the plugin locally (in $(ANSI_CYAN)$(TEXMACS_PLUGIN_DIR)$(ANSI_RESET)))
 	$(call help-line,unplug ,uninstall the plugin)
 	$(call help-line,release,create the release file for this platform/version ($(ANSI_BOLD)$(ANSI_BLUE)$(ARCH).$(OS).$(VERSION)$(ANSI_RESET)))
@@ -110,14 +118,19 @@ help:
 
 
 ## Building, packing and installing
+
 # Compilation
-$(EXE_FILE): $(SOURCE_FILE)
+$(EXE_FILE): $(SOURCE_FILES)
 	$(call action-header,Ensuring output directory exists)
 	mkdir -p $(dir $@)
 	$(call action-header,Compiling)
-	ghc -O2 -g0 $(PIE) $< -o $@
+	pushd $(SOURCE_DIR)
+	# This compilation method is good enough for now, we'll set up building through cabal, stack and nix soon enough
+	ghc -O2 -g0 -j -fdefer-diagnostics -package=process -package=deepseq Main -o $(EXE_NAME)
+	popd
+	mv $(SOURCE_DIR)/$(EXE_NAME) $@
 	$(call action-header,Stripping)
-	strip -s -x -w -R .comment -R .note\* $@
+	strip $@
 
 compile: $(EXE_FILE)
 
@@ -131,7 +144,7 @@ plug: $(TARGET_FILES)
 
 # Release making
 $(RELEASE_FILE): $(DIST_FILES)
-	$(call action-header,Creating $(RELEASE_FILE))
+	$(call action-herder,Creating release file $(RELEASE_FILE))
 	@-rm -f $(RELEASE_FILE) &> /dev/null
 	$(PACK_CMD)
 
@@ -150,10 +163,11 @@ vartest:
 	$(call dump-var,PACK_CMD)
 	$(call dump-var,PIE)
 	$(call dump-var,PLUGIN_DIR)
+	$(call dump-var,PROJECT_DIR)
 	$(call dump-var,RELEASE_FILE)
 	$(call dump-var,SCHEME_FILE)
 	$(call dump-var,SOURCE_DIR)
-	$(call dump-var,SOURCE_FILE)
+	$(call dump-var,SOURCE_FILES)
 	$(call dump-var,TARGET_FILES)
 	$(call dump-var,TEXMACS_PLUGIN_DIR)
 	$(call dump-var,VERSION)
@@ -162,14 +176,17 @@ vartest:
 ## Cleaning
 # Clean temporary compilation files
 clean:
-	@-find $(SOURCE_DIR) \( -iname \*.o -o -iname \*.hi -o -iname \*\~ \) -delete 2> /dev/null
+	$(call action-header,Deleting temp files)
+	@-find $(PROJECT_DIR) \( -iname \*.o -o -iname \*.hi -o -iname \*\~ \) -delete 2> /dev/null
 
 # Uninstall the plugin
 unplug:
+	$(call action-header,Uninstalling local plugin)
 	@-rm -rf $(TEXMACS_PLUGIN_DIR)/$(PLUGIN_DIR) 2> /dev/null
 
 # Clean temporary, target and installed plugin files
 nuke: clean unplug
+	$(call action-header,Removing binary and release file)
 	@-rm -rf $(EXE_DIR) 2> /dev/null
 	@-rm -f $(RELEASE_FILE) 2> /dev/null
 
