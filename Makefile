@@ -7,7 +7,7 @@
 
 .ONESHELL:
 
-.PHONY: help compile plug release vartest clean nuke unplug 
+.PHONY: help compile plug release vartest clean nuke unplug
 
 
 ## Platform, version and derived values
@@ -41,7 +41,7 @@ PACK_CMD		:= tar -cJf $(RELEASE_FILE) $(PLUGIN_DIR)
 ifeq ("$(OS)","win32")
 	EXE_EXT			:= .exe
 	TEXMACS_PLUGIN_DIR	:= $(HOME)/AppData/Roaming/TeXmacs/plugins
-	PIE			:=	# Windows has no support for position-independent code
+	PIE			:=	# Nothing here. Windows has no support for position-independent code.
 	RELEASE_FILE		:= $(RELEASE_FILE_NO_EXT).zip
 	PACK_CMD		:= zip -qr9 $(RELEASE_FILE) $(PLUGIN_DIR)
 endif
@@ -79,9 +79,15 @@ DIST_FILES		:= $(EXE_FILE) $(DOC_FILES) $(SCHEME_FILE)
 TARGET_FILES		:= $(foreach dist_file,$(DIST_FILES),$(TEXMACS_PLUGIN_DIR)/$(dist_file))
 
 
-## Some ANSI code helpers
+## Compiler flags
+# This flag changes the formatting of different-targeted texts
+# (STDOUT, STDERR, prompt#) to add target-coded ANSI coloring.
+ifdef CONSOLE_DEBUG
+	CONSOLE_DEBUG := -DCONSOLE_DEBUG=$(CONSOLE_DEBUG)
+endif
 
-# Codes
+
+## Some ANSI code helpers
 ANSI_START		:= \x1B[
 ANSI_BOLD		:= $(ANSI_START)1m
 ANSI_RESET		:= $(ANSI_START)0m
@@ -122,11 +128,11 @@ help:
 # Compilation
 $(EXE_FILE): $(SOURCE_FILES)
 	$(call action-header,Ensuring output directory exists)
-	mkdir -p $(dir $@)
+	mkdir -p $(@D)
 	$(call action-header,Compiling)
 	pushd $(SOURCE_DIR)
 	# This compilation method is good enough for now, we'll set up building through cabal, stack and nix soon enough
-	ghc -O2 -g0 -j -fdefer-diagnostics -package=process -package=deepseq Main -o $(EXE_NAME)
+	ghc -O2 -g0 -j -fdefer-diagnostics -package=process -package=deepseq ${CONSOLE_DEBUG} Main -o $(EXE_NAME)
 	popd
 	mv $(SOURCE_DIR)/$(EXE_NAME) $@
 	$(call action-header,Stripping)
@@ -155,6 +161,7 @@ release: $(RELEASE_FILE)
 # This dumps important vars for debuggin
 vartest:
 	$(call dump-var,ARCH)
+	$(call dump-var,CONSOLE_DEBUG)
 	$(call dump-var,DIST_FILES)
 	$(call dump-var,DOC_FILES)
 	$(call dump-var,EXE_FILE)

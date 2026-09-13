@@ -1,7 +1,7 @@
 {- |
     Module      : TeXmacs.Data.String.Utils.Parsers
     Description : Parser routines for message processing
-    Copyright   : (c) Alexander Feterman Naranjo, 2023-26
+    Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
@@ -12,6 +12,7 @@
 -}
 
 module TeXmacs.Data.String.Utils.Parsers where
+
 
 import Data.Char ( isSpace )
 import Data.List ( uncons )

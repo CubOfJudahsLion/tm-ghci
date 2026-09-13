@@ -1,7 +1,7 @@
 {- |
     Module      : Main
-    Description : Simple GHCi plugin for TeXmacs, main module.
-    Copyright   : (c) Alexander Feterman Naranjo, 2023-26
+    Description : Simple /GHCi/ plugin for /TeXmacs/, main module
+    Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
@@ -9,27 +9,27 @@
 
     This plugin allows running /GHCi/ sessions inside /TeXmacs/.
     Currently, it provides only basic functionality, i.e., no project
-    options (stack repl, cabal repl.) Its only amenity is the use of
-    the actual /GHCi/ prompt, allowing customizations to be seen in
-    /TeXmacs/.
+    options (@stack repl@, @cabal repl@.) Its only amenity is not
+    blocking @.ghci@ execution, allowing any customizations to show
+    up in /TeXmacs/.
 -}
 
 {-# LANGUAGE GHC2021 #-}
 
 module Main where
 
+
 import Control.Exception ( IOException, catch )
-import System.IO
 import System.Exit ( die )
-import System.Process ( shell, CreateProcess(..), StdStream(CreatePipe), withCreateProcess )
+import System.Process ( proc, CreateProcess(..), StdStream(CreatePipe), withCreateProcess )
 import TeXmacs.Control.IO
 
 
--- |  The @main@ function spawns the child GHCi process and
---    invokes the I/O Loop ('TeXmacs.Control.IO.mainLoop'.)
+-- |  The @main@ function just spawns the child /GHCi/ process and
+--    invokes the I/O Loop (see 'TeXmacs.Control.IO.mainLoop'.)
 main :: IO ()
 main = do
-  let procDesc  = (shell "ghci -fdiagnostics-color=never 2>&1")
+  let procDesc  = (proc "ghci" ["-fdiagnostics-color=never"])
                     { std_in  = CreatePipe
                     , std_out = CreatePipe
                     , std_err = CreatePipe
