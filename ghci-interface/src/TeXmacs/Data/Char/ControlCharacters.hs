@@ -13,7 +13,7 @@ module TeXmacs.Data.Char.ControlCharacters where
 
 --  | Escape characters
 dataBegin, dataEnd, dataEscape :: Char
-dataBegin   = '\x02'    -- ^  (aka @\\STX@, @\\^B@) __B__egins a character sequence.
-dataEnd     = '\x05'    -- ^  (aka @\\ENQ@, @\\^E@) __E__nds a character sequence.
-dataEscape  = '\x1B'    -- ^  (aka @\\ESC@, @\\^[@) Used to __E__scape 'dataBegin' or 'dataEnd' (or itself) if found inside a message.
+dataBegin   = '\02'    -- ^  (aka @\\STX@ or @\\^B@) __B__egins a character sequence.
+dataEnd     = '\05'    -- ^  (aka @\\ENQ@ or @\\^E@) __E__nds a character sequence.
+dataEscape  = '\27'    -- ^  (aka @\\ESC@ or @\\^[@) Used to __Esc__ape 'dataBegin' or 'dataEnd' (or itself) if found inside a message.
 

@@ -1,0 +1,36 @@
+{- |
+ -  Module      : System.IO.StrictImmediate
+    Description : Strict processing of immediately available stream data
+    Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
+    License     : GPL-3-or-later
+    Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
+    Stability   : experimental
+    Portability : POSIX
+-}
+
+module System.IO.StrictImmediate where
+
+
+import Control.DeepSeq ( ($!!) )
+import Data.List.NonEmpty ( NonEmpty(..) )
+import System.IO ( Handle, hGetChar, hReady )
+
+
+-- |  Reads all immediately available characters (i.e.,
+--    without the benefit of 'Control.Concurrent.threadDelay')
+--    from 'Handle' @h@ in a /strict/ manner.
+readAvailable :: Handle -> IO (NonEmpty Char)
+readAvailable h = (:|) <$> hGetChar h >>= worker
+  where
+    worker :: ([Char] -> NonEmpty Char) -> IO (NonEmpty Char)
+    worker !accum = do
+      --  Read only immediately-available characters. Any time
+      --  gap might represent output from another stream.
+      !ready <- hReady h
+      if not ready then
+        pure $!! accum ""
+      else do
+        !ch <- hGetChar h
+        let accum' = accum . (ch :)
+        worker accum'
+

@@ -1,0 +1,41 @@
+spec-version: 0.36.0
+
+name: GHCIInterface
+synopsis: Interface module between GHCi and TeXmacs
+github: CubOfJudahsLion/tm-ghci
+version: 0.2.1.0
+author: Alexander Feterman Naranjo <10951848+CubOfJudahsLion@users.noreply.github.com>
+copyright: (c) 2023-2026 Alexander Feterman Naranjo
+license: GPL-3.0-or-later
+category:
+  - Language
+  - Text
+tested-with: GHC == 9.10.3
+
+dependencies:
+  - base >= 4.19.1 && < 5
+
+language: GHC2021
+
+executable:
+  main: Main.hs
+  source-dirs: src
+  dependencies:
+    - deepseq
+    - process
+  default-extensions:
+    - NamedFieldPuns
+    - NumericUnderscores
+  other-extensions:
+    - Arrows
+    - DeriveAnyClass
+    - DeriveGeneric
+    - PatternSynonyms
+
+tests:
+  test:
+    dependencies:
+      - hspec
+      - quicktest
+      - tasty
+    main: Main.hs

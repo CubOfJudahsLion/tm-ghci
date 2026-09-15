@@ -1,0 +1,206 @@
+-- vim:filetype=text
+
+------------------------------------------------------------------------
+--  LESSONS LEARNED
+------------------------------------------------------------------------
+--  1.  Haskell uses Lazy I/O. Ensure strict evaluation where
+--      needed.
+--  2.  GHCi produces interleaved output from both STDOUT and STDERR
+--      as it appears, whether from .ghci initialization or from and
+--      running Haskell program. Prepare for switching.
+--  3.  The one that can't handle switching streams multiple times
+--      is TeXmacs. STDOUT then STDERR once. That's all it can
+--      handle.
+--  4.  I/O order seems to change when adding the flag
+--      "-fexternal-interpreter". We start by reading STDIO and
+--      crash from closed handle.
+--  5.  Reading lines from GHCi output streams might fail. The last
+--      line never completes; the final \n character isn't inserted.
+--      Read character-wise, separate into lines later.
+------------------------------------------------------------------------
+
+
+------------------------------------------
+--  IO handling routines
+------------------------------------------
+
+
+--  Seeks for data in the @hIn@ 'Handle'. If found, it
+--  formats it and sends it to the @hOut@ 'Handle', returning
+--  'True'. If no data to transfer was found, the result is
+--  'False'.
+runPipe :: Handle -> (String -> String) -> Handle -> IO Bool
+runPipe hIn transform hOut = do
+  maybeInput <- checkForInput hIn
+  case maybeInput of
+    Just input  -> hPutStr hOut (transform input) *> hFlush hOut $> True
+    _           -> pure False
+
+
+--  A data to tag file output with its type of origin stream
+data OutputTag  = Err   -- Comes from an output stream
+                | Out   -- Comes from an error stream
+  deriving (Eq, Show)
+
+--  Convert the tag to its destination stream.
+tagToStdHandle :: OutputTag -> Handle
+tagToStdHandle Err = stderr
+tagToStdHandle Out = stdout
+
+
+--  Represents a line along tagged with the name of its source stream.
+type TaggedLine = (OutputTag, String)
+
+--  A list of lines each tagged with its source stream.
+type TaggedOutput = [TaggedLine]
+
+
+--  Reads lines like 'getInput', but with separate lines each
+--  with a corresponding 'OutputTag'.
+getTaggedInput :: OutputTag -> Handle -> IO TaggedOutput
+getTaggedInput tag = fmap (fmap (tag,) . lines) . getInput
+
+
+--  Takes two readable stream 'Handle's and returns the lines read, all tagged by
+--  their origin stream (this helps in later direction output to the proper
+--  /TeXmacs/ output or channel.) The function will try to read from at least oneBits
+--  of the 'Handle's; once it reads from at least one, it will only concede a maximum
+--  dead time before exiting.
+captureOutputs :: ((OutputTag, Handle), (OutputTag, Handle)) -> IO TaggedOutput
+captureOutputs streams = capture' streams [] 0
+  where
+    --
+    --  Maximum dead time before the function exits
+    maxDeadTime :: Int
+    maxDeadTime = 250
+    --
+    --  Time to wait after each cycle.
+    cycleWait :: Int
+    cycleWait = 1
+    --
+    capture'  :: ((OutputTag, Handle), (OutputTag, Handle)) --  The two handles; might switch places on recursion
+              -> TaggedOutput                               --  Output accumulator
+              -> Int                                        --  Amount of total dead after last output
+              -> IO TaggedOutput                            --  Returns all lines gathered and output-tagged
+    capture' (hotStream@(tag, handle), coldStream) accum deadTime =
+      --  End only when the maximum allowed dead time is exceeded.
+      if deadTime >= maxDeadTime then
+        pure accum
+      else do
+        ready <- hReady handle
+        (streams', accum', deadTime') <-
+          if ready then do
+            --  If a stream is ready, we read what we can
+            --  without pause.
+            lines <- getTaggedInput tag handle
+            --  On recursion we'll try to read the same stream
+            --  again. The @deadTime@ counter is reset, and we
+            --  only count the next pause.
+            pure ((hotStream, coldStream), accum ++ lines, cycleWait)
+          else
+            --  Stream not ready: switch streams and add
+            --  the next pause to the accumulated dead time.
+            pure ((coldStream, hotStream), accum, deadTime + cycleWait)
+        threadDelay (cycleWait * 1000) --  pause time is in microseconds
+        capture' streams' accum' deadTime'
+
+
+--  Extracts the last line tagged as 'Out'. GHCi produces the prompt
+--  'String' through its last @STDOUT@ line.
+extractPrompt :: TaggedOutput -> (Maybe String, TaggedOutput)
+extractPrompt = foldr
+  (\taggedLine@(tag, line) !(maybeLast, lines) ->
+    case (maybeLast, tag) of
+      (Nothing, Out)  -> (Just line,              lines)
+      (_      , _  )  -> (maybeLast, taggedLine : lines))
+  (Nothing, [])
+
+joinEqualOutputs :: TaggedOutput -> TaggedOutput
+joinEqualOutputs = foldr' joinTagged []
+  where
+    joinTagged :: TaggedLine -> TaggedOutput -> TaggedOutput
+    joinTagged line [] = [line]
+    joinTagged line@(tag, msg) !accum@((prevTag, prevMsg):xs)
+      | prevTag == tag  = (tag, msg ++ '\n' : prevMsg):xs
+      | otherwise       = line:accum
+
+
+-- |  Main loop of GHCi interaction.
+mainLoop :: GHCiHandles -> IO ()
+mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = do
+  hSetBuffering stdin   NoBuffering
+  hSetBuffering stdout  NoBuffering
+  hSetBuffering stderr  NoBuffering
+  hSetBuffering ghciIn  NoBuffering
+  hSetBuffering ghciOut NoBuffering
+  hSetBuffering ghciErr NoBuffering
+  loop
+  where
+    loop = do
+      (maybeLast, outputs)  <-  fmap joinEqualOutputs
+                            <$> extractPrompt
+                            <$> captureOutputs ((Out, ghciOut), (Err, ghciErr))
+      mapM_ (   first tagToStdHandle
+            >>> proc (handle, line) -> do
+                  uncurry hPutStrLn -< (handle, line)
+                  hFlush -< handle
+            )
+            outputs
+      when ghciOutputsOpen $ do
+      
+      
+      
+      threadDelay 50_000
+      ghciErrReady <- hWaitForInput ghciErr 200
+      when ghciErrReady
+        (getInput ghciErr >>= (id <$!!>) . hPutStrLn stderr . tmWrap False >> hFlush stderr)
+      ----ghciInReady <- hIsOpen ghciIn
+      ----when ghciInReady $ do
+      threadDelay 50_000
+----
+      Minimum wait between loops
+    minWait :: Int
+    minWait =  10_000
+    --  Maximum length of interloop wait time
+    maxDead :: Int
+    maxDead = 100_000
+    --  Wait time growth factor
+    dilationDelta :: Int
+    dilationDelta = 100
+    --
+    --  Loop worker
+    loop :: IO ()
+    loop = do
+      --  Attempt to move data, annotating successes if they happen
+      hadGhciErr  <- runPipe ghciErr (tmWrap False) stderr
+      hadGhciOut  <- runPipe ghciOut (tmWrap False) stdout
+      hadUserIn   <- runPipe stdin censorQuitCommand ghciIn
+      --  Wait time increases gradually with idleness
+      threadDelay 50_000
+      loop
+----
+    let waitMs' = if hadGhciErr || hadGhciOut || hadUserIn
+                    then minWait
+                    else min maxDead (waitMs + dilationDelta)
+    threadDelay waitMs'
+    loop waitMs'
+----
+      threadDelay 50_000
+      ghciErrReady <- hWaitForInput ghciErr 200
+      when ghciErrReady
+        (getInput ghciErr >>= (id <$!!>) . hPutStrLn stderr . tmWrap False >> hFlush stderr)
+      ----ghciInReady <- hIsOpen ghciIn
+      ----when ghciInReady $ do
+      threadDelay 50_000
+----
+    --  Minimum wait between loops
+    minWait :: Int
+    minWait =  10_000
+    --  Maximum length of interloop wait time
+    maxDead :: Int
+    maxDead = 100_000
+    --  Wait time growth factor
+    dilationDelta :: Int
+    dilationDelta = 100
+    --
+

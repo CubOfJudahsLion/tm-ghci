@@ -1,5 +1,5 @@
-{- |
-    Module      : TeXmacs.Control.IO
+  {- |
+    Module      : Plugin.Control.IO.Bridging
     Description : Input/Output control between /GHCi/ and /TeXmacs/
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
@@ -7,27 +7,34 @@
     Stability   : experimental
     Portability : POSIX
 
-    Messages might contain control requests and/or require
-    special formatting. Any such concerns are also handled by
-    the /I\/O loop function/.
+    Messages might contain control requests or require special formatting,
+    output streams follow different ordering rules, etc. Any such concerns
+    are handled by the /I\/O loop function/.
 -}
 
-module TeXmacs.Control.IO ( mainLoop ) where
+{-# LANGUAGE PatternSynonyms #-}
+
+module Plugin.Control.IO.Bridging ( mainLoop ) where
 
 
-import Control.Arrow ( Arrow(first), (>>>) )
 import Control.Concurrent ( threadDelay )
 import Control.Monad ( when )
 import Data.List.NonEmpty ( toList )
-import GHCi.Control.IO.Types
-import GHCi.Control.IO.Output.Processing
+import GHCi.Control.IO.Types  ( OutputTag(..)
+                              , (:@)
+                              , TaggedLine
+                              , GHCiHandles(..)
+                              )
+import GHCi.Control.IO.Output.Sequencing
+import GHCi.Data.String.Utils
 import System.IO  ( Handle
                   , stdin, stdout
                   , hReady
-                  , hGetChar, hPutStr, hFlush
+                  , hGetChar
+                  , hPutStr, hFlush
                   )
+import System.IO.StrictImmediate
 import TeXmacs.Data.String.MessageFormatting
-import TeXmacs.Data.String.Utils
 
 
 ------------------------------------------
@@ -53,16 +60,22 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = loop
   where
     --  Writes a 'TaggedLine', using the proper format and output stream
     writeTaggedLine :: TaggedLine -> IO ()
-    writeTaggedLine =   first tagToFormat
-                    >>> uncurry formatForTeXmacs
-                    >>> hPutStr stdout
-                    >>> (>> hFlush stdout)
+    writeTaggedLine (tag :@ plainText) = do
+      let format        = tagToFormat tag
+          formattedText = formatForTeXmacs format plainText
+      hPutStr stdout formattedText
+      hFlush stdout
+    --
     --  Loop worker
     loop :: IO ()
     loop = do
-      (maybePrompt, maybeLines) <-  fmap joinEqualOutputs
+      putStrLn "Starting loop, reading out/err"
+      outs@(maybePrompt, maybeLines) <-  fmap joinEqualOutputs
                                 <$> (extractPrompt
                                 <$> captureOutputs (Out :@ ghciOut, Err :@ ghciErr))
+      putStrLn "Done reading, result:"
+      putStrLn $ show outs
+      putStr "\n"
       case maybeLines of
         Just lines  ->  mapM_ writeTaggedLine lines
         Nothing     ->  pure ()
@@ -70,7 +83,8 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = loop
         Just prompt ->  do  hPutStr stdout (formatForTeXmacs AsPrompt prompt)
                             hFlush stdout
         Nothing     ->  pure ()
-      readAvailable stdin >>= (toList >>> censorQuitCommand >>> hPutStr ghciIn)
+      readAvailable stdin >>= hPutStr ghciIn . censorQuitCommand . toList
                           >>  hFlush ghciIn
+      putStrLn "Restarting loop"
       loop
 

@@ -20,7 +20,7 @@ module TeXmacs.Data.String.MessageFormatting ( FormatAs(..), formatForTeXmacs ) 
 
 import Data.List ( singleton )
 import TeXmacs.Data.Char.ControlCharacters
-import Data.Function (on)
+import Data.Function ( on )
 
 
 --  Escapes any /TeXmacs/ special characters in a string.
@@ -33,7 +33,6 @@ escapeForTeXmacs = concatMap escapeChar
       | otherwise                                   = singleton ch
 
 
-#if !CONSOLE_DEBUG
 --  Escapes double quotes and backslashes in a 'String' that is meant
 --  to be formatted as a 'String' literal.
 escapeForScheme :: String -> String
@@ -43,7 +42,6 @@ escapeForScheme = concatMap escapeChar
     escapeChar '\\' = "\\\\"
     escapeChar '"'  = "\\\""
     escapeChar c    = singleton c
-#endif
 
 
 -- |  States the intended purpose (and consequent formatting) of the text to
@@ -69,7 +67,7 @@ ansiReset = "0"     --  resets all color and formatting to default
 -- |  Formats a string to be fit for output to /TeXmacs/
 --    depending on its intended function..
 formatForTeXmacs :: FormatAs -> String -> String
-
+--
 formatForTeXmacs AsPrompt text =
   dataBegin :
 #if CONSOLE_DEBUG
@@ -81,7 +79,7 @@ formatForTeXmacs AsPrompt text =
     ansiStart ++ ansiReset ++ ansiEnd ++
 #endif
   dataEnd : ""
-
+--
 formatForTeXmacs AsError text =
   dataBegin :
 #if CONSOLE_DEBUG
@@ -95,7 +93,7 @@ formatForTeXmacs AsError text =
 #else
   dataEnd : ""
 #endif
-
+--
 formatForTeXmacs AsOutput text =
   dataBegin :
     "verbatim:" ++

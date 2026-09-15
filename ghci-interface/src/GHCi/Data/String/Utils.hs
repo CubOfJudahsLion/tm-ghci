@@ -1,6 +1,6 @@
 {- |
-    Module      : TeXmacs.Data.String.Utils
-    Description : String utilities for processing /TeXmacs/ strings.
+    Module      : GHCi.Data.String.Utils
+    Description : String utilities for processing /GHCi/-related strings.
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
@@ -8,9 +8,10 @@
     Portability : POSIX
 -}
 
-module TeXmacs.Data.String.Utils ( censorQuitCommand ) where
+module GHCi.Data.String.Utils ( censorQuitCommand ) where
 
-import TeXmacs.Data.String.Utils.Parsers
+
+import GHCi.Data.String.Utils.Parsers ( firstParseOr, quitCommandParser )
 
 
 --  Determines whether a string will be read by /GHCi/
@@ -24,6 +25,8 @@ isQuitCommand = firstParseOr quitCommandParser False
 --    /GHCi/ to remind them of the proper way to end the session.
 censorQuitCommand :: String -> String
 censorQuitCommand s = if isQuitCommand s
-                        then "System.IO.hPutStrLn System.IO.stderr \"Right-click and choose \\\"Close Session\\\" to finish.\"\n"
-                        else s
+                        then  "System.IO.hPutStrLn System.IO.stderr \"\
+                              \Right-click and choose \\\"Close Session\\\"\
+                              \ to finish.\"\n"
+                        else  s
 

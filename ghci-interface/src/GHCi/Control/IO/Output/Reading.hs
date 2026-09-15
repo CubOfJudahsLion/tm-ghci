@@ -1,4 +1,5 @@
-{- Module      : GHi.Control.IO.Output.Reading
+{-
+    Module      : GHi.Control.IO.Output.Reading
     Description : Low-level routines reading /GHCi/ output
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
@@ -7,32 +8,18 @@
     Portability : POSIX
 -}
 
-module GHCi.Control.IO.Output.Reading ( readAvailable, readAndTagAvailable ) where
+{-# LANGUAGE PatternSynonyms #-}
+
+module GHCi.Control.IO.Output.Reading ( readAndTagAvailable ) where
 
 
 import Control.Arrow ( Arrow((&&&)), (>>>) )
-import Control.DeepSeq ( ($!!), (<$!!>) )
+import Control.DeepSeq ( (<$!!>) )
 import Data.List.NonEmpty ( NonEmpty(..), toList, nonEmpty )
 import Data.Maybe ( fromMaybe )
-import GHCi.Control.IO.Types ( TaggedLines1, OutputTag, (:@) )
-import System.IO ( Handle, hGetChar, hReady )
-
-
--- |  Reads all immediately available characters from 'Handle' @h@ in a /strict/ manner.
-readAvailable :: Handle -> IO (NonEmpty Char)
-readAvailable h = (:|) <$> hGetChar h >>= worker
-  where
-    worker :: ([Char] -> NonEmpty Char) -> IO (NonEmpty Char)
-    worker !accum = do
-      --  Read only immediately-available characters. Any time
-      --  gap might represent output from another stream.
-      !ready <- hReady h
-      if not ready then
-        pure $!! accum ""
-      else do
-        !ch <- hGetChar h
-        let accum' = accum . (ch :)
-        worker accum'
+import GHCi.Control.IO.Types ( TaggedLines1, OutputTag, pattern (:@) )
+import System.IO ( Handle )
+import System.IO.StrictImmediate
 
 
 --  Reads text using 'readAvailable', splitting it into lines and tagging them with the
@@ -40,8 +27,6 @@ readAvailable h = (:|) <$> hGetChar h >>= worker
 splitAndTag :: OutputTag -> NonEmpty Char -> TaggedLines1
 splitAndTag tag =   toList
                 >>> (:| []) &&& (lines >>> nonEmpty)
-                    --  Even though the current implementation of 'lines' returns a non-empty
-                    --  list of partitions for a non-empty string, 
                 >>> uncurry fromMaybe
                 >>> fmap (tag :@)
 

@@ -14,15 +14,20 @@
     up in /TeXmacs/.
 -}
 
-{-# LANGUAGE GHC2021 #-}
 
 module Main where
 
 
 import Control.Exception ( IOException, catch )
+import GHCi.Control.IO.Types ( GHCiHandles(..) )
+import Plugin.Control.IO.Bridging
 import System.Exit ( die )
-import System.Process ( proc, CreateProcess(..), StdStream(CreatePipe), withCreateProcess )
-import TeXmacs.Control.IO
+import System.Process
+  ( CreateProcess(..)
+  , StdStream(CreatePipe)
+  , proc
+  , withCreateProcess
+  )
 
 
 -- |  The @main@ function just spawns the child /GHCi/ process and
@@ -37,7 +42,7 @@ main = do
   withCreateProcess procDesc
                     (\ !maybeIn !maybeOut !maybeErr _ ->
                         case (maybeIn, maybeOut, maybeErr) of
-                          (Just ghciIn, Just ghciOut, Just ghciErr) ->
+                          (Just ghciIn, Just ghciOut, Just ghciErr) -> do
                             catch
                               (mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}))
                               (\(_ :: IOException) -> die "Connection to GHCi terminated")

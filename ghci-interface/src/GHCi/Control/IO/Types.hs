@@ -25,7 +25,7 @@ import Control.DeepSeq ( NFData )
 import Data.List.NonEmpty ( NonEmpty )
 import GHC.Generics ( Generic )
 import TeXmacs.Data.String.MessageFormatting ( FormatAs(AsOutput, AsError) )
-import System.IO  ( Handle )
+import System.IO ( Handle )
 
 
 -- |  Holds a set of standard handles for /GHCi/. Named

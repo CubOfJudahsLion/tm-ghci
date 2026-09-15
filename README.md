@@ -1,12 +1,12 @@
-<span style="font-size: 32px">`tm-ghci` :: ![Haskell](img/haskell.png) &rarr; ![TeXmacs](img/texmacs.png)</span>
+# `tm-ghci` :: ![Haskell](img/haskell.png) &rarr; ![TeXmacs](img/texmacs.png)
 
-A [TeXmacs](https://texmacs.org) plugin for running
+A [TeXmacs](https://texmacs.org/) plugin for running
 [GHCi](https://wiki.haskell.org/index.php?title=GHC/GHCi)
 sessions.
 
-# Installing
+## Installing
 
-## From release files
+### From release files
 
 The release archives contain statically linked files, which makes it
 possible to interact with different versions of
@@ -26,7 +26,7 @@ Windows.)
 The plugin is rather simple — mostly forwarding input and output. The
 resulting interaction and evaluation facilities are all TeXmacs’s.
 
-## Building and installing from source
+### Building and installing from source
 
 Building the plugin requires a *`bash`*-style shell and a
 [Haskell](https://haskell.org)
@@ -50,7 +50,7 @@ To install just write
 Which takes care of compiling and installing the plug-in in the
 appropriate directory (`$TEXMACS_HOME_PATH/plugins`.)
 
-# Features and Limitations
+## Features and Limitations
 
 `tm-ghci` is *alpha*-stage software. It’s only been tested in
 Windows 10 and
@@ -62,20 +62,20 @@ Presently, it’s able to run a vanilla `ghci` session, i.e., without
 project dependencies autoloaded (as `stack repl` or `cabal repl` would
 do.)
 
-# Licensing
+## Licensing
 
 `tm-ghci` is distributed under the
 [GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html)
 license.
 
-# Issues
+## Issues
 
 Please use the [issues
 page](https://github.com/CubOfJudahsLion/tm-ghci/issues) to report any
 inconviences. Bug reports must include the steps required to reproduce
 the error.
 
-# Thanks to
+## Thanks to
 
 - *The TeXmacs developers* for giving us such a magnificent tool.
 

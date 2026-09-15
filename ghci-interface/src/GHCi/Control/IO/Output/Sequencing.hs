@@ -1,5 +1,5 @@
 {- |
-    Module      : GHCi.Control.IO.Output.Processing
+    Module      : GHCi.Control.IO.Output.Sequencing
     description : Coordinated output capture and processing of /GHCi/'s outputs
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
@@ -13,18 +13,20 @@
     output nature.
 -}
 
-module GHCi.Control.IO.Output.Processing where
+{-# LANGUAGE PatternSynonyms #-}
+
+module GHCi.Control.IO.Output.Sequencing where
 
 
-import Control.Arrow
+import Control.Arrow ( (>>>) )
 import Control.DeepSeq ( ($!!), (<$!!>) )
+import Control.Monad ( when )
+import Control.Concurrent ( threadDelay )
 import Data.Bits ( (.|.) )
-import Data.List.NonEmpty ( NonEmpty(..)
-                          , nonEmpty, toList
-                          )
+import Data.List.NonEmpty ( NonEmpty(..), nonEmpty, toList )
 import GHCi.Control.IO.Types
 import GHCi.Control.IO.Output.Reading ( readAndTagAvailable )
-import System.IO ( Handle )
+import System.IO ( Handle, hReady )
 
 
 -- |  Takes two readable 'Handle's and returns the lines read, all tagged by
@@ -32,10 +34,10 @@ import System.IO ( Handle )
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
 captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read
-                -> IO TaggedLines1                -- ^  A list of lines, each tagged with its origin output stream
+                -> IO TaggedLines1                -- ^  A non-empty list of lines, each tagged with its origin output stream
 captureOutputs (hot@(tag :@ handle), cold) = do
   (x :| xs) <- readAndTagAvailable tag handle   --  First mandatory read
-  let accum = foldl' (.) (x :|) $ map (:) xs    --  Accumulator is a concatenating function (difference list)
+  let accum = foldl' (.) (x :|) $ map (:) xs    --  Turn lines read into a /difference list/
   capture' accum 0 0 (cold, hot)
   where
     --  Maximum dead (consecutive inactive) time in __milliseconds__ before the function exits
@@ -72,7 +74,7 @@ captureOutputs (hot@(tag :@ handle), cold) = do
               in  pure (accum, deadTime + addedWait, addedWait, failedTests + 1)
           --  Don't hog the CPU
           when (delayBeforeRecursion > 0) $
-            threadDelay (delayBeforeRecursion * 1000)   -- 'threadDelay' counts in __nanoseconds__.
+            threadDelay (delayBeforeRecursion * 1_000)   -- 'threadDelay' counts in __nanoseconds__.
           --  Swap stream on recursion regardless of result, for fairer chances.
           capture' accum' deadTime' failedTests' (coldStream, hotStream)
 

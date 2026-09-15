@@ -1,5 +1,5 @@
 {- |
-    Module      : TeXmacs.Data.String.Utils.Parsers
+    Module      : GHCi.Data.String.Utils.Parsers
     Description : Parser routines for message processing
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3
@@ -11,7 +11,7 @@
     extraction from them.
 -}
 
-module TeXmacs.Data.String.Utils.Parsers where
+module GHCi.Data.String.Utils.Parsers where
 
 
 import Data.Char ( isSpace )
@@ -38,7 +38,7 @@ firstParseOr parser def = fromMaybe def . firstParse parser
 --  Parsers
 ------------------------------------------
 
--- |  Recognizes the :quit command. 
+-- |  Recognizes the :quit command.
 quitCommandParser :: ReadP Bool
 quitCommandParser =   skipSpaces
                   *>  (   True

@@ -14,7 +14,8 @@ DOLLAR := $$
 ../README.md: README.tex
 	pandoc -r latex -w gfm $< -o $@
 	sed -r -e 's/<\/?span\b[^>]*>//g'\
-	       -e 's/^(`tm-ghci`[[:space:]]*::[[:space:]]*).*${DOLLAR}/<span style="font-size: 32px">\1![Haskell](img\/haskell.png) \&rarr; ![TeXmacs](img\/texmacs.png)<\/span>/'\
+	       -e '/^\#/s/^(.*)$$/#\1/'\
+	       -e 's/^(`tm-ghci`[[:space:]]*::[[:space:]]*).*$$/# \1![Haskell](img\/haskell.png) \&rarr; ![TeXmacs](img\/texmacs.png)/'\
 	    -i $@
 
 README.tex: README.tm
@@ -22,8 +23,8 @@ README.tex: README.tm
 	sed -r -e '/\\documentclass\{/a\\\\usepackage{ulem}'\
 	       -e 's/\\strikethrough\{/\\sout{/'\
 	       -e 's/\{\\tau\}/{$$\\tau$$}/'\
-	       -e '/^\\newcommand\{.*$$/d'\
-	       -e '/^\\newenvironment\{.*$$/d'\
+	       -e '/^\\newcommand\{/d'\
+	       -e '/^\\newenvironment\{/d'\
 	       -e '/^%/d'\
 	       -e 's/\\tm(acronym|name|person)\{/\\textsc{/g'\
 	       -e 's/\\tmverbatim\{/\\texttt{/g'\
