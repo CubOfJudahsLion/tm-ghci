@@ -11,13 +11,13 @@ endif
 let s:shortmess_save = &shortmess
 set shortmess+=aoO
 badd +1 ~/Projects/tm-ghci/Session.vim
-badd +197 ~/Projects/tm-ghci/Makefile
-badd +1 ~/Projects/tm-ghci/CHANGELOG.md
-badd +26 ~/Projects/tm-ghci/ghci-interface/package.yaml
-badd +46 ~/Projects/tm-ghci/ghci-interface/src/Main.hs
+badd +2 ~/Projects/tm-ghci/Makefile
+badd +15 ~/Projects/tm-ghci/CHANGELOG.md
+badd +6 ~/Projects/tm-ghci/ghci-interface/package.yaml
+badd +6 ~/Projects/tm-ghci/ghci-interface/src/Main.hs
 badd +17 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/ControlCharacters.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
+badd +16 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
+badd +24 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
 badd +12 ~/Projects/tm-ghci/GPL-3.0-LICENSE.txt
 badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IOLoop.hs
 badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
@@ -25,24 +25,21 @@ badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.
 badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
 badd +2 ~/.local/bin/texplug
 badd +234 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO-Boneyard.hs
-badd +41 ~/Projects/tm-ghci/readme/Makefile
+badd +6 ~/Projects/tm-ghci/readme/Makefile
 badd +3 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO/Types.hs
-badd +61 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-badd +38 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
+badd +11 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+badd +16 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
 badd +1 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Processing.hs
 badd +1 Bridging.hs
-badd +5 IO/Bridging.hs
-badd +2 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
-badd +3 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
-badd +2 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
+badd +28 IO/Bridging.hs
+badd +4 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+badd +27 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
+badd +24 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
+badd +28 ~/Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
+badd +153 ~/Projects/tm-ghci/readme/README.tm
+badd +1 ~/Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
 argglobal
 %argdel
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
@@ -59,11 +56,42 @@ setlocal foldlevel=1
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-let s:l = 197 - ((76 * winheight(0) + 39) / 79)
+let s:l = 2 - ((1 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 197
+keepjumps 2
+normal! 08|
+lcd ~/Projects/tm-ghci
+tabnext
+edit ~/Projects/tm-ghci/CHANGELOG.md
+argglobal
+balt ~/Projects/tm-ghci/Makefile
+setlocal foldmethod=expr
+setlocal foldexpr=v:lua.vim.treesitter.foldexpr()
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=4
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+1
+sil! normal! zo
+8
+sil! normal! zo
+8
+sil! normal! zo
+13
+sil! normal! zo
+19
+sil! normal! zo
+21
+sil! normal! zo
+let s:l = 15 - ((14 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 15
 normal! 0
 lcd ~/Projects/tm-ghci
 tabnext
@@ -78,15 +106,19 @@ setlocal foldlevel=3
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-let s:l = 40 - ((39 * winheight(0) + 39) / 79)
+35
+sil! normal! zo
+36
+sil! normal! zo
+let s:l = 6 - ((5 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 40
-normal! 03|
+keepjumps 6
+normal! 04|
 lcd ~/Projects/tm-ghci/ghci-interface
 tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/Main.hs
+edit ~/Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
 argglobal
 balt ~/Projects/tm-ghci/ghci-interface/package.yaml
 setlocal foldmethod=manual
@@ -99,181 +131,32 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 44 - ((43 * winheight(0) + 39) / 79)
+let s:l = 1 - ((0 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 44
-normal! 041|
-lcd ~/Projects/tm-ghci/ghci-interface/src
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/Main.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 8 - ((7 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 8
-normal! 023|
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 2 - ((1 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 2
-normal! 05|
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 2 - ((1 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 2
+keepjumps 1
 normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String
+lcd ~/Projects/tm-ghci/ghci-interface
 tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
+edit ~/Projects/tm-ghci/readme/Makefile
 argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
+balt ~/Projects/tm-ghci/ghci-interface/package.yaml
+setlocal foldmethod=expr
+setlocal foldexpr=v:lua.vim.treesitter.foldexpr()
 setlocal foldmarker={{{,}}}
 setlocal foldignore=#
-setlocal foldlevel=0
+setlocal foldlevel=1
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 3 - ((2 * winheight(0) + 39) / 79)
+let s:l = 6 - ((5 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 3
+keepjumps 6
 normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/Plugin/Control/IO/Bridging.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/Plugin/Control/Bridging.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 26 - ((25 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 26
-normal! 026|
-lcd ~/Projects/tm-ghci/ghci-interface/src/Plugin/Control/IO
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 41 - ((40 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 41
-normal! 052|
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 26 - ((25 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 26
-normal! 025|
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Processing.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 2 - ((1 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 2
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
+lcd ~/Projects/tm-ghci/readme
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
@@ -287,7 +170,6 @@ if filereadable(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
-nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

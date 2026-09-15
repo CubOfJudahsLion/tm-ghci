@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-09-15
+
+- Re-scoped modules to adequate namespaces
+- Implemented multi-stream I/O scanner
+
 ## 2026-09-06
 
 - Refreshed documentation and updated examples

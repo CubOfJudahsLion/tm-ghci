@@ -2,7 +2,7 @@
     Module      : TeXmacs.Data.String.MessageFormatting
     Description : Utilities to format a message to be sent to /TeXmacs/
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
-    License     : GPL-3
+    License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
@@ -20,7 +20,6 @@ module TeXmacs.Data.String.MessageFormatting ( FormatAs(..), formatForTeXmacs ) 
 
 import Data.List ( singleton )
 import TeXmacs.Data.Char.ControlCharacters
-import Data.Function ( on )
 
 
 --  Escapes any /TeXmacs/ special characters in a string.

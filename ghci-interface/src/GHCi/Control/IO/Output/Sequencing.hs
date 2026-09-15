@@ -1,8 +1,8 @@
 {- |
     Module      : GHCi.Control.IO.Output.Sequencing
-    description : Coordinated output capture and processing of /GHCi/'s outputs
+    Description : Coordinated output capture and processing of /GHCi/'s outputs
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
-    License     : GPL-3
+    License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
@@ -24,13 +24,19 @@ import Control.Monad ( when )
 import Control.Concurrent ( threadDelay )
 import Data.Bits ( (.|.) )
 import Data.List.NonEmpty ( NonEmpty(..), nonEmpty, toList )
-import GHCi.Control.IO.Types
+import GHCi.Control.IO.Types  ( OutputTag(Out)
+                              , Tagged
+                              , pattern (:@)
+                              , TaggedLine
+                              , TaggedLines
+                              , TaggedLines1
+                              )
 import GHCi.Control.IO.Output.Reading ( readAndTagAvailable )
 import System.IO ( Handle, hReady )
 
 
 -- |  Takes two readable 'Handle's and returns the lines read, all tagged by
---    their origin stream (this helps in later formatting and directing output)
+--    their origin stream (this helps in later formatting and directing output.)
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
 captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read
@@ -40,7 +46,7 @@ captureOutputs (hot@(tag :@ handle), cold) = do
   let accum = foldl' (.) (x :|) $ map (:) xs    --  Turn lines read into a /difference list/
   capture' accum 0 0 (cold, hot)
   where
-    --  Maximum dead (consecutive inactive) time in __milliseconds__ before the function exits
+    --  Maximum dead (consecutive) time in __milliseconds__ before the function exits
     maxDeadTime :: Int
     maxDeadTime = 125
     --  Waiting time after each cycle.
@@ -53,34 +59,34 @@ captureOutputs (hot@(tag :@ handle), cold) = do
               -> (Tagged Handle, Tagged Handle) --  Switching stream pair
               -> IO TaggedLines1                --  Returns all tagged lines gathered
     capture' !accum !deadTime !failedTests (hotStream@(tag :@ handle), coldStream) = do
-        readable <- hReady handle
-        if not readable && failedTests .|. 1 == 1 && deadTime >= maxDeadTime then
-          --  If there are no ready streams and we're over the idle limit, stop. Note that
-          --  'failedTests' is one failure short now, i.e., if the actual failure count is
-          --  even (both streams failed several times), then 'failedTests' is odd.
-          pure $ accum []
-        else do
-          (accum', deadTime', delayBeforeRecursion, failedTests') <-
-            if readable then do
-              --  If a stream is readable, we read what we can without pauses
-              taggedTexts <- readAndTagAvailable tag handle
-              let extendedAccum = foldl' (.) accum $ (:) <$> taggedTexts
-              --  A successful read resets both dead time and failure count
-              pure (extendedAccum, 0, 0, 0)
-            else
-              --  Every second failure (i.e., after both streams fail to be ready again) we
-              --  set a delay before the iteration and add it to the cumulative dead time
-              let addedWait = (failedTests .|. 1) * cycleWait
-              in  pure (accum, deadTime + addedWait, addedWait, failedTests + 1)
-          --  Don't hog the CPU
-          when (delayBeforeRecursion > 0) $
-            threadDelay (delayBeforeRecursion * 1_000)   -- 'threadDelay' counts in __nanoseconds__.
-          --  Swap stream on recursion regardless of result, for fairer chances.
-          capture' accum' deadTime' failedTests' (coldStream, hotStream)
+      readable <- hReady handle
+      if not readable && failedTests .|. 1 == 1 && deadTime >= maxDeadTime then
+        --  If there are no ready streams and we're over the idle limit, stop. Note that
+        --  'failedTests' is one failure short now, i.e., if the actual failure count is
+        --  even (both streams failed several times), then 'failedTests' is odd.
+        pure $ accum []
+      else do
+        (accum', deadTime', delayBeforeRecursion, failedTests') <-
+          if readable then do
+            --  If a stream is readable, we read what we can without pauses
+            taggedTexts <- readAndTagAvailable tag handle
+            let extendedAccum = foldl' (.) accum $ (:) <$> taggedTexts
+            --  A successful read resets both dead time and failure count
+            pure (extendedAccum, 0, 0, 0)
+          else
+            --  Every second failure (i.e., after both streams fail to be ready again) we
+            --  set a delay before the iteration and add it to the cumulative dead time
+            let addedWait = (failedTests .|. 1) * cycleWait
+            in  pure (accum, deadTime + addedWait, addedWait, failedTests + 1)
+        --  Don't hog the CPU
+        when (delayBeforeRecursion > 0) $
+          threadDelay (delayBeforeRecursion * 1_000)   -- 'threadDelay' counts in __nanoseconds__.
+        --  Swap stream on recursion regardless of result, for fairer chances.
+        capture' accum' deadTime' failedTests' (coldStream, hotStream)
 
 
--- |  Extracts the last line tagged as 'Out'. /GHCi/
---    produces the prompt as its last @STDOUT@ line.
+-- |  Extracts the last line tagged as 'Out' (/GHCi/
+--    produces the prompt as its last @STDOUT@ line.)
 extractPrompt :: TaggedLines1 -> (Maybe String, Maybe TaggedLines1)
 extractPrompt =   toList
               >>> foldr (\taggedLine@(tag :@ line) !(maybeLast, lines) ->

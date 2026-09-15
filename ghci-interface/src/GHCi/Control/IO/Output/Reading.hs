@@ -1,11 +1,13 @@
-{-
+{- |
     Module      : GHi.Control.IO.Output.Reading
-    Description : Low-level routines reading /GHCi/ output
+    Description : Low-level routines for reading /GHCi/ output
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
-    License     : GPL-3
+    License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
+
+    Low-level routines for reading /GHCi/ output.
 -}
 
 {-# LANGUAGE PatternSynonyms #-}
@@ -32,7 +34,7 @@ splitAndTag tag =   toList
 
 
 -- |  Reads all immediately available characters (using 'readAvailable') and then splits
---    the result into lines and applies the tag to each (using 'splitAndTag'.)
+--    the result into lines and applies the tag to each.
 readAndTagAvailable :: OutputTag -> Handle -> IO TaggedLines1
 readAndTagAvailable tag = (splitAndTag tag <$!!>) . readAvailable
 

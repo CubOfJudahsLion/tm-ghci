@@ -1,8 +1,8 @@
-  {- |
-    Module      : Plugin.Control.IO.Bridging
-    Description : Input/Output control between /GHCi/ and /TeXmacs/
+{- |
+    Module      : TmGHCi.Control.IO.Bridging
+    Description : Input\/Output control between /GHCi/ and /TeXmacs/
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
-    License     : GPL-3
+    License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
@@ -14,14 +14,14 @@
 
 {-# LANGUAGE PatternSynonyms #-}
 
-module Plugin.Control.IO.Bridging ( mainLoop ) where
+module TmGHCi.Control.IO.Bridging ( mainLoop ) where
 
 
 import Control.Concurrent ( threadDelay )
 import Control.Monad ( when )
 import Data.List.NonEmpty ( toList )
 import GHCi.Control.IO.Types  ( OutputTag(..)
-                              , (:@)
+                              , pattern (:@)
                               , TaggedLine
                               , GHCiHandles(..)
                               )

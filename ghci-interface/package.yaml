@@ -8,6 +8,7 @@ author: Alexander Feterman Naranjo <10951848+CubOfJudahsLion@users.noreply.githu
 copyright: (c) 2023-2026 Alexander Feterman Naranjo
 license: GPL-3.0-or-later
 category:
+  - Control
   - Language
   - Text
 tested-with: GHC == 9.10.3
@@ -18,8 +19,8 @@ dependencies:
 language: GHC2021
 
 executable:
-  main: Main.hs
   source-dirs: src
+  main: Main.hs
   dependencies:
     - deepseq
     - process
@@ -34,8 +35,10 @@ executable:
 
 tests:
   test:
+    source-dirs: tests
+    main: Main.hs
     dependencies:
       - hspec
       - quicktest
       - tasty
-    main: Main.hs
+

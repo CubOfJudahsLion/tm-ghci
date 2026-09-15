@@ -20,7 +20,7 @@ module Main where
 
 import Control.Exception ( IOException, catch )
 import GHCi.Control.IO.Types ( GHCiHandles(..) )
-import Plugin.Control.IO.Bridging
+import TmGHCi.Control.IO.Bridging
 import System.Exit ( die )
 import System.Process
   ( CreateProcess(..)

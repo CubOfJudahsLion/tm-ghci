@@ -2,7 +2,7 @@
     Module      : GHCi.Data.String.Utils.Parsers
     Description : Parser routines for message processing
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
-    License     : GPL-3
+    License     : GPL-3-or-later
     Maintainer  : 10951848+CubOfJudahsLion@users.noreply.github.com
     Stability   : experimental
     Portability : POSIX
