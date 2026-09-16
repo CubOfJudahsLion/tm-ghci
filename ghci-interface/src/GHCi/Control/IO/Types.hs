@@ -42,8 +42,8 @@ data GHCiHandles = GHCiHandles
 
 
 -- |  A data to tag file output with its type of origin stream
-data OutputTag  = Err   -- ^  Comes from an output stream
-                | Out   -- ^  Comes from an error stream
+data OutputTag  = Err
+                | Out
   deriving (Eq, Show, Generic, NFData)
 
 

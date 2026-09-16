@@ -28,10 +28,12 @@ import GHCi.Control.IO.Types  ( OutputTag(..)
 import GHCi.Control.IO.Output.Sequencing
 import GHCi.Data.String.Utils
 import System.IO  ( Handle
+                  , BufferMode(LineBuffering)
                   , stdin, stdout
                   , hReady
                   , hGetChar
                   , hPutStr, hFlush
+                  , hSetBuffering
                   )
 import System.IO.StrictImmediate
 import TeXmacs.Data.String.MessageFormatting
@@ -53,10 +55,14 @@ tagToFormat Out = AsOutput
 --  Main I/O loop
 ------------------------------------------
 
--- |  Handles message traffic between the two programs,
---    including conversions and events.
+-- |  Handles message traffic between the two programs
+--    intelligently, taking care of conversions and events.
 mainLoop :: GHCiHandles -> IO ()
-mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = loop
+mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = do
+  hSetBuffering ghciOut LineBuffering
+  hSetBuffering ghciErr LineBuffering
+  hSetBuffering stdin   LineBuffering
+  loop
   where
     --  Writes a 'TaggedLine', using the proper format and output stream
     writeTaggedLine :: TaggedLine -> IO ()
@@ -69,13 +75,9 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = loop
     --  Loop worker
     loop :: IO ()
     loop = do
-      putStrLn "Starting loop, reading out/err"
-      outs@(maybePrompt, maybeLines) <-  fmap joinEqualOutputs
+      (maybePrompt, maybeLines) <-  fmap joinEqualOutputs
                                 <$> (extractPrompt
                                 <$> captureOutputs (Out :@ ghciOut, Err :@ ghciErr))
-      putStrLn "Done reading, result:"
-      putStrLn $ show outs
-      putStr "\n"
       case maybeLines of
         Just lines  ->  mapM_ writeTaggedLine lines
         Nothing     ->  pure ()
@@ -85,6 +87,5 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = loop
         Nothing     ->  pure ()
       readAvailable stdin >>= hPutStr ghciIn . censorQuitCommand . toList
                           >>  hFlush ghciIn
-      putStrLn "Restarting loop"
       loop
 

@@ -22,7 +22,7 @@ import Control.Arrow ( (>>>) )
 import Control.DeepSeq ( ($!!), (<$!!>) )
 import Control.Monad ( when )
 import Control.Concurrent ( threadDelay )
-import Data.Bits ( (.|.) )
+import Data.Bits ( (.&.) )
 import Data.List.NonEmpty ( NonEmpty(..), nonEmpty, toList )
 import GHCi.Control.IO.Types  ( OutputTag(Out)
                               , Tagged
@@ -60,7 +60,7 @@ captureOutputs (hot@(tag :@ handle), cold) = do
               -> IO TaggedLines1                --  Returns all tagged lines gathered
     capture' !accum !deadTime !failedTests (hotStream@(tag :@ handle), coldStream) = do
       readable <- hReady handle
-      if not readable && failedTests .|. 1 == 1 && deadTime >= maxDeadTime then
+      if not readable && failedTests .&. 1 == 1 && deadTime >= maxDeadTime then
         --  If there are no ready streams and we're over the idle limit, stop. Note that
         --  'failedTests' is one failure short now, i.e., if the actual failure count is
         --  even (both streams failed several times), then 'failedTests' is odd.
@@ -76,7 +76,7 @@ captureOutputs (hot@(tag :@ handle), cold) = do
           else
             --  Every second failure (i.e., after both streams fail to be ready again) we
             --  set a delay before the iteration and add it to the cumulative dead time
-            let addedWait = (failedTests .|. 1) * cycleWait
+            let addedWait = (failedTests .&. 1) * cycleWait
             in  pure (accum, deadTime + addedWait, addedWait, failedTests + 1)
         --  Don't hog the CPU
         when (delayBeforeRecursion > 0) $

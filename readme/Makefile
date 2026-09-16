@@ -1,6 +1,7 @@
 # Converts the TeXmacs file into Markdown
 # Requires pandoc-cli and TeXmacs
 
+
 .ONESHELL:
 
 .PHONY: clean cleanall
@@ -8,8 +9,6 @@
 
 # My particular installation uses an AppImage. Change to suit your setup.
 TM_CMD := /opt/TeXmacs/TeXmacs-2.1.5-x86_64.AppImage
-
-DOLLAR := $$
 
 ../README.md: README.tex
 	pandoc -r latex -w gfm $< -o $@
@@ -20,12 +19,12 @@ DOLLAR := $$
 
 README.tex: README.tm
 	${TM_CMD} -C $< $@
-	sed -r -e '/\\documentclass\{/a\\\\usepackage{ulem}'\
-	       -e 's/\\strikethrough\{/\\sout{/'\
-	       -e 's/\{\\tau\}/{$$\\tau$$}/'\
+	sed -r -e '/^%/d'\
 	       -e '/^\\newcommand\{/d'\
 	       -e '/^\\newenvironment\{/d'\
-	       -e '/^%/d'\
+	       -e '/\\documentclass\{/a\\\\usepackage{ulem}'\
+	       -e 's/\\strikethrough\{/\\sout{/'\
+	       -e 's/\{\\tau\}/{$$\\tau$$}/'\
 	       -e 's/\\tm(acronym|name|person)\{/\\textsc{/g'\
 	       -e 's/\\tmverbatim\{/\\texttt{/g'\
 	       -e 's/\\TeXmacs/TeXmacs/g'\

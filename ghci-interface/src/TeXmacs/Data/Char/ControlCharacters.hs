@@ -10,20 +10,18 @@
     Characters with special meanings for /TeXmacs/.
 -}
 
-module TeXmacs.Data.Char.ControlCharacters
-  ( -- |  (aka /@\\STX@/ or /@\\^B@/) __B__egins a character sequence.
-    dataBegin
-    -- |  (aka /@\\ENQ@/ or /@\\^E@/) __E__nds a character sequence.
-  , dataEnd
-   -- |  (aka /@\\ESC@/ or /@\\^[@/) Used to __Esc__ape 'dataBegin' or 'dataEnd' (or itself) if found inside a message.
-  , dataEscape
-  ) where
-import GHC.RTS.Flags (ProfFlags(descrSelector))
+module TeXmacs.Data.Char.ControlCharacters where
 
 
---  | Escape characters
-dataBegin, dataEnd, dataEscape :: Char
+-- |  (@\\^B@) __B__egins a message
+dataBegin :: Char
 dataBegin   = '\02'
+
+-- |  (@\\^E@) __E__nds a message
+dataEnd :: Char
 dataEnd     = '\05'
+
+-- |  (@\\^[@ or @\\ESC@) __Esc__apes a succeeding 'dataBegin' or 'dataEnd' (or itself)
+dataEscape :: Char
 dataEscape  = '\27'
 

@@ -18,29 +18,8 @@
 module TeXmacs.Data.String.MessageFormatting ( FormatAs(..), formatForTeXmacs ) where
 
 
-import Data.List ( singleton )
-import TeXmacs.Data.Char.ControlCharacters
-
-
---  Escapes any /TeXmacs/ special characters in a string.
-escapeForTeXmacs :: String -> String
-escapeForTeXmacs = concatMap escapeChar
-  where
-    escapeChar :: Char -> String
-    escapeChar ch
-      | ch `elem` [dataEscape, dataBegin, dataEnd]  = [dataEscape, ch]
-      | otherwise                                   = singleton ch
-
-
---  Escapes double quotes and backslashes in a 'String' that is meant
---  to be formatted as a 'String' literal.
-escapeForScheme :: String -> String
-escapeForScheme = concatMap escapeChar
-  where
-    escapeChar :: Char -> String
-    escapeChar '\\' = "\\\\"
-    escapeChar '"'  = "\\\""
-    escapeChar c    = singleton c
+import TeXmacs.Data.Char.ControlCharacters ( dataBegin, dataEnd )
+import TeXmacs.Data.String.Escaping
 
 
 -- |  States the intended purpose (and consequent formatting) of the text to
@@ -73,7 +52,7 @@ formatForTeXmacs AsPrompt text =
     ansiStart ++ ansiBlue ++ ansiEnd ++
 #endif
       "prompt#" ++
-      escapeForTeXmacs text ++
+      escapeForVerbatim text ++
 #if CONSOLE_DEBUG
     ansiStart ++ ansiReset ++ ansiEnd ++
 #endif
@@ -85,7 +64,7 @@ formatForTeXmacs AsError text =
     ansiStart ++ ansiRed ++ ansiEnd ++
 #endif
       "scheme:(with color=\"red\" \"" ++
-      escapeForScheme (escapeForTeXmacs text) ++
+      escapeForScheme text ++
 #if CONSOLE_DEBUG
     ansiStart ++ ansiReset ++ ansiEnd ++
   dataEnd : "\n"
@@ -96,7 +75,7 @@ formatForTeXmacs AsError text =
 formatForTeXmacs AsOutput text =
   dataBegin :
     "verbatim:" ++
-    escapeForTeXmacs text ++
+    escapeForVerbatim text ++
 #if CONSOLE_DEBUG
   dataEnd : "\n"
 #else

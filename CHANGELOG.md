@@ -3,7 +3,7 @@
 ## 2026-09-15
 
 - Re-scoped modules to adequate namespaces
-- Implemented multi-stream I/O scanner
+- Implemented multi-stream I/O reader
 
 ## 2026-09-06
 
@@ -18,7 +18,7 @@
 
 ## 2026-08-29
 
-- `dev` branch added
+- `dev` branch recreated
 - Some folder reorganization in preparation for future work
 - Makefile enhancements
   * Verified compatibility with FreeBSD and Windows

@@ -29,7 +29,7 @@ readAvailable !h = (:|) <$> hGetChar h >>= worker
     worker !accum = do
       --  Read only immediately-available characters. Any time gap might
       --  represent output has ended or switched to another stream
-      !ready <- hReady h
+      ready <- hReady h
       if not ready then
         pure $!! accum ""
       else do
