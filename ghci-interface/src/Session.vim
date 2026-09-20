@@ -40,21 +40,25 @@ badd +14 TmGHCi/Control/IO/Bridging.hs
 badd +1 Bridging.hs
 badd +29 IO/Bridging.hs
 badd +1 Session.vim
-badd +18 Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
-badd +29 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-badd +5 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
-badd +32 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
-badd +10 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-badd +39 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs
-badd +4 Projects/tm-ghci/ghci-interface/src/Main.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
-badd +0 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
+badd +25 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
+badd +58 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
+badd +21 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
+badd +21 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
+badd +67 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+badd +40 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
+badd +102 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+badd +79 Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs
+badd +46 Projects/tm-ghci/ghci-interface/src/Main.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
+badd +42 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Escaping.hs
+badd +2 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Formatting.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/System/IO/Strict.hs
 argglobal
 %argdel
+tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
@@ -78,185 +82,17 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 4 - ((3 * winheight(0) + 39) / 79)
+let s:l = 46 - ((45 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 4
-normal! 0
+keepjumps 46
+normal! 032|
 lcd ~/Projects/tm-ghci/ghci-interface/src
 tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
+edit ~/Projects/tm-ghci/ghci-interface/src/System/IO/Strict.hs
 argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/Main.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 18 - ((17 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 18
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/Main.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 29 - ((28 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 29
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 5 - ((4 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 5
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 32 - ((31 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 32
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 20 - ((19 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 20
-normal! 0
-lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 10 - ((9 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 10
-normal! 063|
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 39 - ((38 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 39
-normal! 065|
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-setlocal foldmethod=manual
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 3 - ((2 * winheight(0) + 39) / 79)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 3
-normal! 079|
-lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
-tabnext
-edit ~/Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs
-argglobal
-balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+balt ~/Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
 setlocal foldmethod=manual
 setlocal foldexpr=0
 setlocal foldmarker={{{,}}}
@@ -273,6 +109,195 @@ keepjumps exe s:l
 normal! zt
 keepjumps 1
 normal! 0
+lcd ~/Projects/tm-ghci/ghci-interface/src/System/IO
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/Main.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 15 - ((14 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 15
+normal! 0
+lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Escaping.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 42 - ((41 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 42
+normal! 038|
+lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Formatting.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 2 - ((1 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 2
+normal! 039|
+lcd ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 34 - ((33 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 34
+normal! 031|
+lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 57 - ((56 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 57
+normal! 0
+lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 30 - ((29 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 30
+normal! 049|
+lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 67 - ((66 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 67
+normal! 0
+lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 102 - ((67 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 102
+normal! 023|
+lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
+tabnext
+edit ~/Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs
+argglobal
+balt ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 79 - ((72 * winheight(0) + 39) / 79)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 79
+normal! 027|
 lcd ~/Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'

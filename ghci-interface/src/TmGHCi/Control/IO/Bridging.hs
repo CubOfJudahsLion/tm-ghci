@@ -8,8 +8,8 @@
     Portability : POSIX
 
     Messages might contain control requests or require special formatting,
-    output streams follow different ordering rules, etc. Any such concerns
-    are handled by the /I\/O loop function/.
+    stream sets for each application follow different conventions, etc. Any
+    such concerns are handled by the /I\/O loop function/.
 -}
 
 {-# LANGUAGE PatternSynonyms #-}
@@ -17,26 +17,25 @@
 module TmGHCi.Control.IO.Bridging ( mainLoop ) where
 
 
+import Control.Arrow ( Arrow(first, (***)), (>>>) )
 import Control.Concurrent ( threadDelay )
 import Control.Monad ( when )
+import Data.List ( intercalate, singleton )
 import Data.List.NonEmpty ( toList )
-import GHCi.Control.IO.Types  ( OutputTag(..)
-                              , pattern (:@)
-                              , TaggedLine
+import Data.Maybe ( maybe )
+import GHCi.Control.IO.Types  ( OutputTag(..), Tagged, pattern (:@)
+                              , TaggedLine, TaggedLines1
                               , GHCiHandles(..)
                               )
 import GHCi.Control.IO.Output.Sequencing
 import GHCi.Data.String.Utils
 import System.IO  ( Handle
-                  , BufferMode(LineBuffering)
                   , stdin, stdout
-                  , hReady
-                  , hGetChar
+                  -- , hSetEncoding, utf16le
                   , hPutStr, hFlush
-                  , hSetBuffering
                   )
-import System.IO.StrictImmediate
-import TeXmacs.Data.String.MessageFormatting
+import System.IO.Strict ( readImmediate )
+import TeXmacs.Data.String.Formatting
 
 
 ------------------------------------------
@@ -51,41 +50,35 @@ tagToFormat Err = AsError
 tagToFormat Out = AsOutput
 
 
+--  Writes a 'TaggedLine', using the proper format and output stream
+formatTaggedLine :: TaggedLine -> String
+formatTaggedLine (tag :@ plainText) = formatForTeXmacs (tagToFormat tag) plainText
+
+
+--  Turns outputs and prompt into a single formatted line
+joinLinesAndPrompt :: (Maybe TaggedLines1, Maybe String) -> String
+joinLinesAndPrompt  =       maybe [] (toList >>> fmap formatTaggedLine)
+                        *** maybe [] (formatForTeXmacs AsPrompt >>> singleton)
+                    >>> uncurry (++)
+                    >>> intercalate "\n"
+
 ------------------------------------------
 --  Main I/O loop
 ------------------------------------------
 
--- |  Handles message traffic between the two programs
---    intelligently, taking care of conversions and events.
+-- |  I/O loop function. Handles message traffic between the two
+--    programs intelligently, taking care of conversions and events.
 mainLoop :: GHCiHandles -> IO ()
 mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = do
-  hSetBuffering ghciOut LineBuffering
-  hSetBuffering ghciErr LineBuffering
-  hSetBuffering stdin   LineBuffering
+  --hSetEncoding stdout utf16le
   loop
   where
-    --  Writes a 'TaggedLine', using the proper format and output stream
-    writeTaggedLine :: TaggedLine -> IO ()
-    writeTaggedLine (tag :@ plainText) = do
-      let format        = tagToFormat tag
-          formattedText = formatForTeXmacs format plainText
-      hPutStr stdout formattedText
-      hFlush stdout
-    --
-    --  Loop worker
     loop :: IO ()
-    loop = do
-      (maybePrompt, maybeLines) <-  fmap joinEqualOutputs
-                                <$> (extractPrompt
-                                <$> captureOutputs (Out :@ ghciOut, Err :@ ghciErr))
-      case maybeLines of
-        Just lines  ->  mapM_ writeTaggedLine lines
-        Nothing     ->  pure ()
-      case maybePrompt of
-        Just prompt ->  do  hPutStr stdout (formatForTeXmacs AsPrompt prompt)
-                            hFlush stdout
-        Nothing     ->  pure ()
-      readAvailable stdin >>= hPutStr ghciIn . censorQuitCommand . toList
-                          >>  hFlush ghciIn
-      loop
+    loop  =   captureOutputs (Out :@ ghciOut, Err :@ ghciErr)
+          >>= hPutStr stdout . joinLinesAndPrompt {- . first joinEqualOutputs-} . extractPrompt
+          >>  hFlush stdout
+          >>  readImmediate stdin
+          >>= hPutStr ghciIn . censorQuitCommand . toList
+          >>  hFlush ghciIn
+          >>  loop
 

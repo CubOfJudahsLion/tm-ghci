@@ -21,6 +21,12 @@ dataBegin   = '\02'
 dataEnd :: Char
 dataEnd     = '\05'
 
+-- |  'dataEnd' as a single-character string, as it's
+--    often the last element in a string construction.
+dataEndStr :: String
+dataEndStr = [dataEnd]
+
+
 -- |  (@\\^[@ or @\\ESC@) __Esc__apes a succeeding 'dataBegin' or 'dataEnd' (or itself)
 dataEscape :: Char
 dataEscape  = '\27'

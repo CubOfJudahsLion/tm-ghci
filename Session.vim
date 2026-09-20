@@ -4,40 +4,40 @@ let v:this_session=expand("<sfile>:p")
 doautoall SessionLoadPre
 silent only
 silent tabonly
-cd ~/Projects/tm-ghci/ghci-interface/src/Plugin/Control
+cd ~
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 let s:shortmess_save = &shortmess
 set shortmess+=aoO
-badd +1 ~/Projects/tm-ghci/Session.vim
-badd +2 ~/Projects/tm-ghci/Makefile
-badd +15 ~/Projects/tm-ghci/CHANGELOG.md
-badd +6 ~/Projects/tm-ghci/ghci-interface/package.yaml
-badd +6 ~/Projects/tm-ghci/ghci-interface/src/Main.hs
-badd +17 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/ControlCharacters.hs
-badd +16 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
-badd +24 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
-badd +12 ~/Projects/tm-ghci/GPL-3.0-LICENSE.txt
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IOLoop.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
-badd +2 ~/.local/bin/texplug
-badd +234 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO-Boneyard.hs
-badd +6 ~/Projects/tm-ghci/readme/Makefile
-badd +3 ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO/Types.hs
-badd +11 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-badd +16 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
-badd +1 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Processing.hs
+badd +1 Projects/tm-ghci/Session.vim
+badd +9 Projects/tm-ghci/Makefile
+badd +15 Projects/tm-ghci/CHANGELOG.md
+badd +10 Projects/tm-ghci/ghci-interface/package.yaml
+badd +6 Projects/tm-ghci/ghci-interface/src/Main.hs
+badd +17 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/ControlCharacters.hs
+badd +16 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
+badd +24 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
+badd +12 Projects/tm-ghci/GPL-3.0-LICENSE.txt
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IOLoop.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
+badd +2 .local/bin/texplug
+badd +234 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO-Boneyard.hs
+badd +9 Projects/tm-ghci/readme/Makefile
+badd +3 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO/Types.hs
+badd +11 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+badd +16 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
+badd +1 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Processing.hs
 badd +1 Bridging.hs
 badd +28 IO/Bridging.hs
-badd +4 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
-badd +27 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
-badd +24 ~/Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
-badd +28 ~/Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
-badd +153 ~/Projects/tm-ghci/readme/README.tm
-badd +1 ~/Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
+badd +4 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
+badd +27 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
+badd +24 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
+badd +28 Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
+badd +153 Projects/tm-ghci/readme/README.tm
+badd +1 Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
 argglobal
 %argdel
 tabnew +setlocal\ bufhidden=wipe
@@ -45,9 +45,9 @@ tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit ~/Projects/tm-ghci/Makefile
+edit Projects/tm-ghci/Makefile
 argglobal
-balt ~/Projects/tm-ghci/Session.vim
+balt Projects/tm-ghci/Session.vim
 setlocal foldmethod=expr
 setlocal foldexpr=v:lua.vim.treesitter.foldexpr()
 setlocal foldmarker={{{,}}}
@@ -56,12 +56,12 @@ setlocal foldlevel=1
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-let s:l = 2 - ((1 * winheight(0) + 39) / 79)
+let s:l = 9 - ((8 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 2
-normal! 08|
+keepjumps 9
+normal! 0
 lcd ~/Projects/tm-ghci
 tabnext
 edit ~/Projects/tm-ghci/CHANGELOG.md
@@ -77,22 +77,16 @@ setlocal foldnestmax=20
 setlocal foldenable
 1
 sil! normal! zo
-8
+3
 sil! normal! zo
-8
+5
 sil! normal! zo
-13
-sil! normal! zo
-19
-sil! normal! zo
-21
-sil! normal! zo
-let s:l = 15 - ((14 * winheight(0) + 39) / 79)
+let s:l = 7 - ((6 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 15
-normal! 0
+keepjumps 7
+normal! 09|
 lcd ~/Projects/tm-ghci
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/package.yaml
@@ -106,15 +100,13 @@ setlocal foldlevel=3
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-35
-sil! normal! zo
 36
 sil! normal! zo
-let s:l = 6 - ((5 * winheight(0) + 39) / 79)
+let s:l = 10 - ((9 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 6
+keepjumps 10
 normal! 04|
 lcd ~/Projects/tm-ghci/ghci-interface
 tabnext
@@ -150,11 +142,11 @@ setlocal foldlevel=1
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-let s:l = 6 - ((5 * winheight(0) + 39) / 79)
+let s:l = 9 - ((8 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 6
+keepjumps 9
 normal! 0
 lcd ~/Projects/tm-ghci/readme
 tabnext 1

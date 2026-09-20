@@ -30,7 +30,7 @@ import System.Process ( CreateProcess(..)
 
 
 -- |  The @main@ function just spawns the child /GHCi/ process and
---    invokes the I/O Loop (see 'TeXmacs.Control.IO.mainLoop'.)
+--    invokes the I/O Loop (see 'TmGHCi.Control.IO.Bridging.mainLoop'.)
 main :: IO ()
 main = do
   let procDesc  = (proc "ghci" ["-fdiagnostics-color=never"])

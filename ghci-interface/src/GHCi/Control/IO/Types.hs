@@ -27,9 +27,8 @@ module GHCi.Control.IO.Types
 import Control.DeepSeq ( NFData )
 import Data.List.NonEmpty ( NonEmpty )
 import GHC.Generics ( Generic )
-import TeXmacs.Data.String.MessageFormatting ( FormatAs(AsOutput, AsError) )
+import TeXmacs.Data.String.Formatting ( FormatAs(AsOutput, AsError) )
 import System.IO ( Handle )
-import GHC.RTS.Flags (ProfFlags(descrSelector))
 
 
 -- |  Holds a set of standard handles for /GHCi/. Named
@@ -50,19 +49,19 @@ data OutputTag  = Err
 -- |  Represents a datum tagged with a source stream
 type Tagged a = (OutputTag, a)
 
--- |  @t :\@ a@ is a synonym for @(t, a)@. Useful to have in case the representation changes.
+-- |  @t :\@ a@ [de]constructs a @Tagged a@.
 pattern (:@) :: OutputTag -> a -> Tagged a
 pattern t :@ a = (t, a)
 infix 6 :@
 
 
--- |  Represents a single line tagged with its source stream. Note that we use a regular
---    'String' (instead of a t'NonEmpty' 'Char') as output can produce empty lines arbitrarily.
+-- |  Represents a single line tagged with its source stream. Note that we use a regular 'String'
+--    (instead of a t'NonEmpty' 'Char') as /GHCi/ output can produce empty lines arbitrarily.
 type TaggedLine = Tagged String
 
--- |  A list (possibly empty) of 'TaggedLine' tuples
+-- |  A (possibly empty) list of 'TaggedLine's.
 type TaggedLines = [TaggedLine]
 
--- |  A 'NonEmpty' list of 'TaggedLine' tuples
+-- |  A 'NonEmpty' list of 'TaggedLine's.
 type TaggedLines1 = NonEmpty TaggedLine
 

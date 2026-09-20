@@ -1,0 +1,14 @@
+-- vim:filetype=text
+-- |  Escapes double quotes, special characters and backslashes in a message
+--    meant for /@scheme:@/ output.
+escapeForScheme :: String -> String
+escapeForScheme = concatMap escapeChar
+  where
+    escapeChar :: Char -> String
+    escapeChar '\\'                                           = "\\\\"
+    escapeChar '"'                                            = "\\\""
+    escapeChar c | c `elem` [dataEscape, dataBegin, dataEnd]  = [dataEscape, c]
+                 | otherwise                                  = singleton c
+
+
+

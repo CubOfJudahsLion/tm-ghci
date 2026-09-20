@@ -1,5 +1,5 @@
 {- |
-    Module      : TeXmacs.Data.String.MessageFormatting
+    Module      : TeXmacs.Data.String.Formatting
     Description : Utilities to format a message to be sent to /TeXmacs/
     Copyright   : (c) Alexander Feterman Naranjo, 2023-2026
     License     : GPL-3-or-later
@@ -15,10 +15,10 @@
 
 {-# LANGUAGE CPP #-}
 
-module TeXmacs.Data.String.MessageFormatting ( FormatAs(..), formatForTeXmacs ) where
+module TeXmacs.Data.String.Formatting ( FormatAs(..), formatForTeXmacs ) where
 
 
-import TeXmacs.Data.Char.ControlCharacters ( dataBegin, dataEnd )
+import TeXmacs.Data.Char.ControlCharacters ( dataBegin, dataEnd, dataEndStr )
 import TeXmacs.Data.String.Escaping
 
 
@@ -56,20 +56,24 @@ formatForTeXmacs AsPrompt text =
 #if CONSOLE_DEBUG
     ansiStart ++ ansiReset ++ ansiEnd ++
 #endif
-  dataEnd : ""
+  dataEndStr
 --
 formatForTeXmacs AsError text =
   dataBegin :
 #if CONSOLE_DEBUG
     ansiStart ++ ansiRed ++ ansiEnd ++
 #endif
-      "scheme:(with color=\"red\" \"" ++
-      escapeForScheme text ++
+      --"scheme:(document (with \"color\" \"red\" \"" ++
+      --  escapeForScheme text ++
+      --"\"))" ++
+      "latex:\\tmcolor{red}{" ++
+        escapeForLaTeX text ++
+      '}' :
 #if CONSOLE_DEBUG
     ansiStart ++ ansiReset ++ ansiEnd ++
   dataEnd : "\n"
 #else
-  dataEnd : ""
+  dataEndStr
 #endif
 --
 formatForTeXmacs AsOutput text =
@@ -79,6 +83,6 @@ formatForTeXmacs AsOutput text =
 #if CONSOLE_DEBUG
   dataEnd : "\n"
 #else
-  dataEnd : ""
+  dataEndStr
 #endif
 

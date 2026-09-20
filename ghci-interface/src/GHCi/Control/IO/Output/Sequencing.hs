@@ -15,10 +15,10 @@
 
 {-# LANGUAGE PatternSynonyms #-}
 
-module GHCi.Control.IO.Output.Sequencing where
+module GHCi.Control.IO.Output.Sequencing ( captureOutputs, extractPrompt, joinEqualOutputs ) where
 
 
-import Control.Arrow ( (>>>) )
+import Control.Arrow ( first, (>>>) )
 import Control.DeepSeq ( ($!!), (<$!!>) )
 import Control.Monad ( when )
 import Control.Concurrent ( threadDelay )
@@ -35,30 +35,37 @@ import GHCi.Control.IO.Output.Reading ( readAndTagAvailable )
 import System.IO ( Handle, hReady )
 
 
+--  Maximum dead (consecutive) time in __milliseconds__ before the function exits
+maxDeadTime :: Int
+maxDeadTime = 200
+
+--  Allowed maximum wait between characters of a single stream
+charWait :: Int
+charWait = 1
+
+--  Waiting time after each cycle.
+cycleWait :: Int
+cycleWait = 5
+
+
 -- |  Takes two readable 'Handle's and returns the lines read, all tagged by
 --    their origin stream (this helps in later formatting and directing output.)
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
 captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read
                 -> IO TaggedLines1                -- ^  A non-empty list of lines, each tagged with its origin output stream
-captureOutputs (hot@(tag :@ handle), cold) = do
-  (x :| xs) <- readAndTagAvailable tag handle   --  First mandatory read
-  let accum = foldl' (.) (x :|) $ map (:) xs    --  Turn lines read into a /difference list/
+captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
+  (x :| xs) <- readAndTagAvailable tag charWait handle otherHandle  --  First mandatory read
+  let accum = foldl' (.) (x :|) $ map (:) xs                        --  Turn lines read into a /difference list/
   capture' accum 0 0 (cold, hot)
   where
-    --  Maximum dead (consecutive) time in __milliseconds__ before the function exits
-    maxDeadTime :: Int
-    maxDeadTime = 125
-    --  Waiting time after each cycle.
-    cycleWait :: Int
-    cycleWait = 1
     --  Worker function. Swaps streams on recursion so each gets its turn.
     capture'  :: (TaggedLines -> TaggedLines1)  --  Output accumulator (as a difference list)
               -> Int                            --  Total dead time after last output
               -> Int                            --  Number of 'Handle' readiness test failed in a row
               -> (Tagged Handle, Tagged Handle) --  Switching stream pair
               -> IO TaggedLines1                --  Returns all tagged lines gathered
-    capture' !accum !deadTime !failedTests (hotStream@(tag :@ handle), coldStream) = do
+    capture' !accum !deadTime !failedTests (hotStream@(tag :@ handle), coldStream@(_ :@ otherHandle)) = do
       readable <- hReady handle
       if not readable && failedTests .&. 1 == 1 && deadTime >= maxDeadTime then
         --  If there are no ready streams and we're over the idle limit, stop. Note that
@@ -68,8 +75,8 @@ captureOutputs (hot@(tag :@ handle), cold) = do
       else do
         (accum', deadTime', delayBeforeRecursion, failedTests') <-
           if readable then do
-            --  If a stream is readable, we read what we can without pauses
-            taggedTexts <- readAndTagAvailable tag handle
+            --  If a stream is readable, we read what we can with minimal pause
+            taggedTexts <- readAndTagAvailable tag charWait handle otherHandle
             let extendedAccum = foldl' (.) accum $ (:) <$> taggedTexts
             --  A successful read resets both dead time and failure count
             pure (extendedAccum, 0, 0, 0)
@@ -87,14 +94,14 @@ captureOutputs (hot@(tag :@ handle), cold) = do
 
 -- |  Extracts the last line tagged as 'Out' (/GHCi/
 --    produces the prompt as its last @STDOUT@ line.)
-extractPrompt :: TaggedLines1 -> (Maybe String, Maybe TaggedLines1)
+extractPrompt :: TaggedLines1 -> (Maybe TaggedLines1, Maybe String)
 extractPrompt =   toList
-              >>> foldr (\taggedLine@(tag :@ line) !(maybeLast, lines) ->
-                          case (maybeLast, tag) of
-                            (Nothing, Out)  -> (Just line,              lines)
-                            (_      , _  )  -> (maybeLast, taggedLine : lines))
-                        (Nothing, [])
-              >>> fmap nonEmpty
+              >>> foldr (\taggedLine@(tag :@ line) !(lines, maybeLast) ->
+                          case (tag, maybeLast) of
+                            (Out, Nothing)  -> (lines,              Just line)
+                            (_  , _      )  -> (taggedLine : lines, maybeLast))
+                        ([], Nothing)
+              >>> first nonEmpty
 
 
 -- |  Takes a list of 'TaggedLines1' and joins successive lines with the

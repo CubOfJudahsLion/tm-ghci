@@ -16,11 +16,10 @@ module TeXmacs.Data.String.Escaping where
 
 
 import Data.List ( singleton )
-import TeXmacs.Data.Char.ControlCharacters
-import Text.Printf ( printf )
+import TeXmacs.Data.Char.ControlCharacters ( dataBegin, dataEnd, dataEscape )
 
 
--- |  Escapes any /TeXmacs/ special characters in a string for /verbatim/ output
+-- |  Escapes any /TeXmacs/ special characters in a string for /@verbatim:@/ output
 escapeForVerbatim :: String -> String
 escapeForVerbatim = concatMap escapeChar
   where
@@ -32,14 +31,16 @@ escapeForVerbatim = concatMap escapeChar
       | otherwise                                   = singleton ch
 
 
--- |  Escapes double quotes, control characters and backslashes in a message
---    meant for /scheme/ output.
-escapeForScheme :: String -> String
-escapeForScheme = concatMap escapeChar
+-- |  Escapes characters with special meanings in /LaTeX/ in string meant
+--    for /@latex:@/ output.
+escapeForLaTeX :: String -> String
+escapeForLaTeX = concatMap escapeChar
   where
+    --  Escapes both special /TeXmacs/ and /LaTeX/ special characters.
     escapeChar :: Char -> String
-    escapeChar '\\'           = "\\\\"
-    escapeChar '"'            = "\\\""
-    escapeChar c | c < '\32'  = printf "\\x%02hhd" c
-                 | otherwise  = singleton c
+    escapeChar '\\'                                           = "{\\textbackslash}"
+    escapeChar '~'                                            = "\\~{}"
+    escapeChar c | c `elem` ['{', '}', '&', '$', '%', '#']    = "{\\" ++ c : "}"
+                 | c `elem` [dataEscape, dataBegin, dataEnd]  = [dataEscape, c]
+                 | otherwise                                  = singleton c
 

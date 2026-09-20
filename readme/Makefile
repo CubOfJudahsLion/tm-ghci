@@ -7,7 +7,7 @@
 .PHONY: clean cleanall
 
 
-# My particular installation uses an AppImage. Change to suit your setup.
+# I run TeXmacs from an AppImage. Change to suit your setup.
 TM_CMD := /opt/TeXmacs/TeXmacs-2.1.5-x86_64.AppImage
 
 ../README.md: README.tex
