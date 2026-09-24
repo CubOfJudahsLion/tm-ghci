@@ -1,0 +1,13 @@
+-- vim:filetype=text
+-- |  Takes a list of 'TaggedLines1' and joins successive lines with the
+--    same 'OutputTag' into a single line with @newline@s interspersed.
+joinEqualOutputs :: Maybe TaggedLines1 -> Maybe TaggedLines1
+joinEqualOutputs = fmap (foldr joinTagged []) >>> (>>= nonEmpty)
+  where
+    joinTagged :: TaggedLine -> TaggedLines -> TaggedLines
+    joinTagged line [] = [line]
+    joinTagged line@(tag :@ msg) !accum@(prevTag :@ prevMsg : rest)
+      | prevTag == tag  = tag :@ (msg ++ '\n' : prevMsg) : rest
+      | otherwise       = line:accum
+
+

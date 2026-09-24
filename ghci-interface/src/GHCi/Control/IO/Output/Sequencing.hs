@@ -15,7 +15,7 @@
 
 {-# LANGUAGE PatternSynonyms #-}
 
-module GHCi.Control.IO.Output.Sequencing ( captureOutputs, extractPrompt, joinEqualOutputs ) where
+module GHCi.Control.IO.Output.Sequencing ( captureOutputs, extractPrompt ) where
 
 
 import Control.Arrow ( first, (>>>) )
@@ -52,7 +52,7 @@ cycleWait = 5
 --    their origin stream (this helps in later formatting and directing output.)
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
-captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read
+captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read alternatively
                 -> IO TaggedLines1                -- ^  A non-empty list of lines, each tagged with its origin output stream
 captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
   (x :| xs) <- readAndTagAvailable tag charWait handle otherHandle  --  First mandatory read
@@ -102,16 +102,4 @@ extractPrompt =   toList
                             (_  , _      )  -> (taggedLine : lines, maybeLast))
                         ([], Nothing)
               >>> first nonEmpty
-
-
--- |  Takes a list of 'TaggedLines1' and joins successive lines with the
---    same 'OutputTag' into a single line with @newline@s interspersed.
-joinEqualOutputs :: Maybe TaggedLines1 -> Maybe TaggedLines1
-joinEqualOutputs = fmap (foldr joinTagged []) >>> (>>= nonEmpty)
-  where
-    joinTagged :: TaggedLine -> TaggedLines -> TaggedLines
-    joinTagged line [] = [line]
-    joinTagged line@(tag :@ msg) !accum@(prevTag :@ prevMsg : rest)
-      | prevTag == tag  = tag :@ (msg ++ '\n' : prevMsg) : rest
-      | otherwise       = line:accum
 

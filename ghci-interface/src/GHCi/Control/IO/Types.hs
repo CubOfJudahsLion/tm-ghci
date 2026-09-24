@@ -10,7 +10,7 @@
     Data types for capturing and processing output from /GHCi/.
 -}
 
-{-# LANGUAGE PatternSynonyms, DeriveGeneric, DeriveAnyClass #-}
+{-# LANGUAGE PatternSynonyms, DeriveAnyClass #-}
 {-# OPTIONS_HADDOCK show-extensions #-}
 
 module GHCi.Control.IO.Types

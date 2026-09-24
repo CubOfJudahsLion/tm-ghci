@@ -1,0 +1,66 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.39.6.
+--
+-- see: https://github.com/sol/hpack
+
+name:           GHCIInterface
+version:        0.2.1.0
+synopsis:       Interface module between GHCi and TeXmacs
+category:       Control,
+                Language,
+                Text
+homepage:       https://github.com/CubOfJudahsLion/tm-ghci#readme
+bug-reports:    https://github.com/CubOfJudahsLion/tm-ghci/issues
+author:         Alexander Feterman Naranjo <10951848+CubOfJudahsLion@users.noreply.github.com>
+maintainer:     Alexander Feterman Naranjo <10951848+CubOfJudahsLion@users.noreply.github.com>
+copyright:      (c) 2023-2026 Alexander Feterman Naranjo
+license:        GPL-3.0-or-later
+build-type:     Simple
+tested-with:
+    GHC == 9.10.3
+
+source-repository head
+  type: git
+  location: https://github.com/CubOfJudahsLion/tm-ghci
+
+executable GHCIInterface
+  main-is: Main.hs
+  other-modules:
+      Common.Control.IO.Classes
+      Common.Control.IO.Types
+      GHCi.Control.IO.Output.Reading
+      GHCi.Control.IO.Output.Sequencing
+      GHCi.Control.IO.Types
+      GHCi.Data.String.Utils
+      GHCi.Data.String.Utils.Parsers
+      System.IO.Strict
+      TeXmacs.Data.Char.ControlCharacters
+      TeXmacs.Data.String.Escaping
+      TeXmacs.Data.String.Formatting
+      TmGHCi.Control.IO.Bridging
+  hs-source-dirs:
+      src
+  other-extensions:
+      DeriveAnyClass
+      PatternSynonyms
+      StandaloneDeriving
+      TypeData
+      TypeFamilies
+  build-depends:
+      base >=4.19.1 && <5
+    , deepseq
+    , process
+  default-language: GHC2021
+
+test-suite test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+      tests
+  build-depends:
+      base >=4.19.1 && <5
+    , hspec
+    , quicktest
+    , tasty
+  default-language: GHC2021

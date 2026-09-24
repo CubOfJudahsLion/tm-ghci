@@ -43,5 +43,5 @@ readAndTagAvailable :: OutputTag        -- ^  'OutputTag' to attach to resulting
                     -> Handle           -- ^  'Handle' to reag from
                     -> Handle           -- ^  Alternate 'Handle' to check
                     -> IO TaggedLines1  -- ^  Returns a 'NonEmpty' list of tagged lines.
-readAndTagAvailable !tag !wait !handle !otherHandle = (splitAndTag tag <$!!>) $ readAvailable wait handle otherHandle
+readAndTagAvailable !tag !wait !handle !otherHandle = (splitAndTag tag <$!!>) $ readAvailable wait handle (Just otherHandle)
 

@@ -1,6 +1,6 @@
 # `tm-ghci` :: ![Haskell](img/haskell.png) &rarr; ![TeXmacs](img/texmacs.png)
 
-A [TeXmacs](https://texmacs.org/) plugin for running
+A [TeXmacs](https://texmacs.org) plugin for running
 [GHCi](https://wiki.haskell.org/index.php?title=GHC/GHCi)
 sessions.
 
@@ -21,10 +21,11 @@ Windows) or `$TEXMACS_HOME_PATH/plugins/`
 `%UserProfile%\AppData\ Roaming\TeXmacs\plugins\` in
 Windows.)
 
-`ghci` needs to be in the system `PATH` for the plugin to work.
+`ghci` needs to be in your `PATH` for the plugin to work.
 
-The plugin is rather simple — mostly forwarding input and output. The
-resulting interaction and evaluation facilities are all TeXmacs’s.
+The plugin is comparatively simple, as its job is mostly forwarding
+input and output. The resulting interaction and evaluation facilities
+are all TeXmacs’s.
 
 ### Building and installing from source
 
@@ -68,12 +69,27 @@ do.)
 [GPL-3](https://www.gnu.org/licenses/gpl-3.0.en.html)
 license.
 
+## AI Policy
+
+Research has shown that overreliance on [AI causes cognitive
+deterioration](https://news.harvard.edu/gazette/story/2025/11/is-ai-dulling-our-minds/)
+— all while [failing to improve
+productivity](https://futurism.com/artificial-intelligence/ai-failing-boost-productivity)
+in a perceivably meaningful way, and it’s certainly not helping [code
+quality](https://www.reversinglabs.com/blog/software-quality-collapse-ai-accelerate),
+[technical
+debt](https://sloanreview.mit.edu/article/how-to-manage-tech-debt-in-the-ai-era/)
+or — one would think this would tip the scales —
+[finances](https://fortune.com/article/why-is-the-cost-of-ai-higher-than-human-workers-nvidia-executive/).
+This project is thus AI-free for the benefit of both the user and the
+author.
+
 ## Issues
 
-Please use the [issues
-page](https://github.com/CubOfJudahsLion/tm-ghci/issues) to report any
-inconviences. Bug reports must include the steps required to reproduce
-the error.
+Use the [issues page](https://github.com/CubOfJudahsLion/tm-ghci/issues)
+to report erroneous behavior. Please include platform data (i.e.,
+OS/distribution, hardware), a clear description of the error condition,
+and the steps required to reproduce it.
 
 ## Thanks to
 

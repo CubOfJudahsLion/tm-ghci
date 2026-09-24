@@ -24,14 +24,12 @@ executable:
   dependencies:
     - deepseq
     - process
-  default-extensions:
-    - NamedFieldPuns
-    - NumericUnderscores
   other-extensions:
-    - Arrows
     - DeriveAnyClass
-    - DeriveGeneric
     - PatternSynonyms
+    - StandaloneDeriving
+    - TypeData
+    - TypeFamilies
 
 tests:
   test:

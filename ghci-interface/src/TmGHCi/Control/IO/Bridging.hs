@@ -42,20 +42,19 @@ import TeXmacs.Data.String.Formatting
 --  Utility functions
 ------------------------------------------
 
---  Convert a 'GHCi.Control.IO.Types.OutputTag' into its corresponding
---  'TeXmacs.Data.String.MessageFormatting.FormatAs' (for use with
---  'TeXmacs.Data.String.MessageFormatting.format')
+--  Convert a 'OutputTag' into its corresponding 'FormatAs' (for use
+--  with 'formatForTeXmacs'.)
 tagToFormat :: OutputTag -> FormatAs
 tagToFormat Err = AsError
 tagToFormat Out = AsOutput
 
 
---  Writes a 'TaggedLine', using the proper format and output stream
+--  Writes a 'TaggedLine', using the proper format and output stream.
 formatTaggedLine :: TaggedLine -> String
 formatTaggedLine (tag :@ plainText) = formatForTeXmacs (tagToFormat tag) plainText
 
 
---  Turns outputs and prompt into a single formatted line
+--  Turns outputs and prompt into a single formatted line.
 joinLinesAndPrompt :: (Maybe TaggedLines1, Maybe String) -> String
 joinLinesAndPrompt  =       maybe [] (toList >>> fmap formatTaggedLine)
                         *** maybe [] (formatForTeXmacs AsPrompt >>> singleton)
@@ -75,7 +74,7 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = do
   where
     loop :: IO ()
     loop  =   captureOutputs (Out :@ ghciOut, Err :@ ghciErr)
-          >>= hPutStr stdout . joinLinesAndPrompt {- . first joinEqualOutputs-} . extractPrompt
+          >>= hPutStr stdout . joinLinesAndPrompt . extractPrompt
           >>  hFlush stdout
           >>  readImmediate stdin
           >>= hPutStr ghciIn . censorQuitCommand . toList

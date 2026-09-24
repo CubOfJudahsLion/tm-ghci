@@ -7,7 +7,7 @@
   <image|../img/haskell.png||20pt||> <math|\<rightarrow\>>
   <image|../img/texmacs.png||20pt||>>>
 
-  <center|A <hlink|<TeXmacs>|https://texmacs.org/> plugin for running
+  <center|A <hlink|<TeXmacs>|https://texmacs.org> plugin for running
   <hlink|<name|GHCi>|https://wiki.haskell.org/index.php?title=GHC/GHCi>
   sessions.>
 
@@ -27,11 +27,11 @@
   <rigid|<verbatim|%UserProfile%\\AppData\\Roaming\\TeXmacs\\plugins\\>> in
   <name|Windows>.)
 
-  <verbatim|ghci> needs to be in the system <verbatim|PATH> for the plugin to
-  work.
+  <verbatim|ghci> needs to be in your <verbatim|PATH> for the plugin to work.
 
-  The plugin is rather simple \V mostly forwarding input and output. The
-  resulting interaction and evaluation facilities are all <TeXmacs>'s.
+  The plugin is comparatively simple, as its job is mostly forwarding input
+  and output. The resulting interaction and evaluation facilities are all
+  <TeXmacs>'s.
 
   <subsection|Building and installing from source>
 
@@ -77,11 +77,25 @@
   <hlink|<acronym|GPL-3>|https://www.gnu.org/licenses/gpl-3.0.en.html>
   license.
 
+  <section|AI Policy>
+
+  Research has shown that overreliance on <hlink|AI causes cognitive
+  deterioration|https://news.harvard.edu/gazette/story/2025/11/is-ai-dulling-our-minds/>
+  \V all while <hlink|failing to improve productivity|https://futurism.com/artificial-intelligence/ai-failing-boost-productivity>
+  in a perceivably meaningful way, and it's certainly not helping <hlink|code
+  quality|https://www.reversinglabs.com/blog/software-quality-collapse-ai-accelerate>,
+  <hlink|technical debt|https://sloanreview.mit.edu/article/how-to-manage-tech-debt-in-the-ai-era/>
+  or \V one would think this would tip the scales \V
+  <hlink|finances|https://fortune.com/article/why-is-the-cost-of-ai-higher-than-human-workers-nvidia-executive/>.
+  This project is thus AI-free for the benefit of both the user and the
+  author.
+
   <section|Issues>
 
-  Please use the <hlink|issues page|https://github.com/CubOfJudahsLion/tm-ghci/issues>
-  to report any inconviences. Bug reports must include the steps required to
-  reproduce the error.
+  Use the <hlink|issues page|https://github.com/CubOfJudahsLion/tm-ghci/issues>
+  to report erroneous behavior. Please include platform data (i.e.,
+  OS/distribution, hardware), a clear description of the error condition, and
+  the steps required to reproduce it.
 
   <section|Thanks to>
 
@@ -116,6 +130,7 @@
     <associate|auto-5|<tuple|3|?>>
     <associate|auto-6|<tuple|4|?>>
     <associate|auto-7|<tuple|5|?>>
+    <associate|auto-8|<tuple|6|?>>
   </collection>
 </references>
 
@@ -142,13 +157,17 @@
       <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-5><vspace|0.5fn>
 
-      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|4<space|2spc>Issues>
-      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|4<space|2spc>AI
+      Policy> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-6><vspace|0.5fn>
 
-      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|5<space|2spc>Thanks
-      to> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|5<space|2spc>Issues>
+      <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-7><vspace|0.5fn>
+
+      <vspace*|1fn><with|font-series|<quote|bold>|math-font-series|<quote|bold>|6<space|2spc>Thanks
+      to> <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
+      <no-break><pageref|auto-8><vspace|0.5fn>
     </associate>
   </collection>
 </auxiliary>
