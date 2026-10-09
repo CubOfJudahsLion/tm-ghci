@@ -1,0 +1,11 @@
+-- |  Reads all [near-]immediately available characters  and then splits the result in
+--    o lines and applies the tag to each. This function uses 'readAvailable'; see it
+--    for further details on parameters and behavior.
+readAndTagAvailable :: SGHCiReadChannel channel   -- ^  'OutputTag' to attach to resulting lines
+                    -> Int                        -- ^  Grace period between character reads
+                    -> Handle                     -- ^  'Handle' to reag from
+                    -> Handle                     -- ^  Alternate 'Handle' to check
+                    -> IO (TaggedLines1 channel)  -- ^  Returns a 'NonEmpty' list of tagged lines.
+readAndTagAvailable !tag !wait !handle !otherHandle =
+  (splitAndTag tag <$!!>) $ readAvailable wait handle (Just otherHandle)
+

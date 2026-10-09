@@ -52,7 +52,7 @@ cycleWait = 5
 --    their origin stream (this helps in later formatting and directing output.)
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
-captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read alternatively
+captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read alternatingly
                 -> IO TaggedLines1                -- ^  A non-empty list of lines, each tagged with its origin output stream
 captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
   (x :| xs) <- readAndTagAvailable tag charWait handle otherHandle  --  First mandatory read

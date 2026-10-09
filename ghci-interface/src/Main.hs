@@ -20,13 +20,13 @@ module Main where
 
 import Control.Exception ( IOException, catch )
 import GHCi.Control.IO.Types ( GHCiHandles(..) )
-import TmGHCi.Control.IO.Bridging
 import System.Exit ( die )
 import System.Process ( CreateProcess(..)
                       , StdStream(CreatePipe)
                       , proc
                       , withCreateProcess
                       )
+import TmGHCi.Control.IO.Bridging
 
 
 -- |  The @main@ function just spawns the child /GHCi/ process and

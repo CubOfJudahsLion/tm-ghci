@@ -20,9 +20,13 @@ import Data.Maybe ( maybe )
 import System.IO ( Handle, hGetChar, hReady, hWaitForInput )
 
 
--- |  Reads all available characters in a __strict__ manner, either synchronously or
---    given a grace idle period. The idle period is skipped if 'otherHandle' is
---    available for reading. The funcion is strict on its arguments.
+
+-- |  Waits for a first character to read, then reads all following characters in a __strict__ manner,
+--    either synchronously or given a grace idle period. The idle period is skipped if @otherHandle@ is
+--    available for reading.
+--    The second stream argument allows us to sync with client processes, the output streams of which
+--    we read, and not to wait on the current stream if the client process is writing on the other.
+--    The funcion is strict on its arguments.
 readAvailable :: Int                  -- ^  Grace period (in milliseconds) between character reads.
                                       --    __0__ means /"read only immediately available."/
               -> Handle               -- ^  'Handle' to read from.
@@ -49,8 +53,8 @@ readAvailable !wait !handle !otherHandle = (:|) <$> hGetChar handle >>= worker
         worker accum'
 
 
--- |  Reads all immediately available characters (i.e., synchronously) in a __strict__
---    manner. @readImmediate h@ is a shorthand for @'readAvailable' 0 h Nothing@.
+-- |  Waits for a character to read, then reads all immediately available characters (i.e., synchronously)
+--    in a __strict__ manner. @readImmediate h@ is a shorthand for @'readAvailable' 0 h Nothing@.
 readImmediate :: Handle -> IO (NonEmpty Char)
 readImmediate h = readAvailable 0 h Nothing
 {-# INLINEABLE readImmediate #-}

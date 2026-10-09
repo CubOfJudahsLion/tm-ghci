@@ -35,7 +35,7 @@ data FormatAs = AsOutput  -- for @STDOUT@
 #if CONSOLE_DEBUG
 ansiStart, ansiRed, ansiReset, ansiEnd :: String
 ansiStart = "\ESC[" --  starts an ANSI code sequence
-ansiEnd = "m"       --  end the ANSI code sequence
+ansiEnd = "m"       --  ends the ANSI code sequence
 ansiRed = "31"      --  sets foreground text color to red
 ansiBlue = "34"     --  sets foreground text color to blue
 ansiReset = "0"     --  resets all color and formatting to default

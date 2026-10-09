@@ -23,11 +23,15 @@ executable:
   main: Main.hs
   dependencies:
     - deepseq
+    - mtl
     - process
   other-extensions:
+    - DataKinds
+    - DefaultSignatures
     - DeriveAnyClass
+    - LambdaCase
     - PatternSynonyms
-    - StandaloneDeriving
+    - RoleAnnotations
     - TypeData
     - TypeFamilies
 

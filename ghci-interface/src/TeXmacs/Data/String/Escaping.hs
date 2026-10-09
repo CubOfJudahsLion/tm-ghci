@@ -39,8 +39,8 @@ escapeForLaTeX = concatMap escapeCharForLaTeX
   where
     --  Escapes both special /TeXmacs/ and /LaTeX/ special characters.
     escapeCharForLaTeX :: Char -> String
-    escapeCharForLaTeX '\\'                                           = "{\\textbackslash}"
-    escapeCharForLaTeX '~'                                            = "\\~{}"
-    escapeCharForLaTeX c | c `elem` ['{', '}', '&', '$', '%', '#']    = "{\\" ++ c : "}"
-                         | otherwise                                  = escapeCharForVerbatim c
+    escapeCharForLaTeX '\\'                                         = "{\\textbackslash}"
+    escapeCharForLaTeX '~'                                          = "\\~{}"
+    escapeCharForLaTeX c | c `elem` ['{', '}', '&', '$', '%', '#']  = "{\\" ++ c : "}"
+                         | otherwise                                = escapeCharForVerbatim c
 

@@ -27,10 +27,11 @@ source-repository head
 executable GHCIInterface
   main-is: Main.hs
   other-modules:
-      Common.Control.IO.Classes
-      Common.Control.IO.Types
+      Common.Control.IO.Streams
+      GHCi.Control.IO
       GHCi.Control.IO.Output.Reading
       GHCi.Control.IO.Output.Sequencing
+      GHCi.Control.IO.Output.Writing
       GHCi.Control.IO.Types
       GHCi.Data.String.Utils
       GHCi.Data.String.Utils.Parsers
@@ -42,14 +43,19 @@ executable GHCIInterface
   hs-source-dirs:
       src
   other-extensions:
+      DataKinds
+      DefaultSignatures
       DeriveAnyClass
+      DisambiguateRecordFields
+      LambdaCase
       PatternSynonyms
-      StandaloneDeriving
+      RoleAnnotations
       TypeData
       TypeFamilies
   build-depends:
       base >=4.19.1 && <5
     , deepseq
+    , mtl
     , process
   default-language: GHC2021
 

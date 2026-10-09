@@ -24,12 +24,13 @@ isQuitCommand = firstParseOr quitCommandParser False
 
 -- |  If the provided 'String' -- assumed to be from user input --
 --    is recognized as the @:quit@ command (or any of its allowed
---    variants), supress it and cause /GHCi/ to remind them of the
---    proper way to end the session.
+--    variants), supress it and cause /GHCi/ to print the proper
+--    way to end the session in /TeXmacs/.
 censorQuitCommand :: String -> String
-censorQuitCommand s = if isQuitCommand s
-                        then  "System.IO.hPutStrLn System.IO.stderr \"\
-                              \Right-click and choose \\\"Close Session\\\"\
-                              \ to finish.\"\n"
-                        else  s
+censorQuitCommand s = if isQuitCommand s then
+                        "System.IO.hPutStrLn System.IO.stderr \"\
+                        \Right-click and choose \\\"Close Session\\\"\
+                        \ to finish.\"\n"
+                      else
+                        s
 
