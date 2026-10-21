@@ -45,23 +45,23 @@ badd +33 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters
 badd +58 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/MessageFormatting.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
 badd +33 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
-badd +7 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
-badd +45 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
+badd +90 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
+badd +99 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
 badd +27 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
 badd +47 Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs
-badd +48 Projects/tm-ghci/ghci-interface/src/Main.hs
+badd +37 Projects/tm-ghci/ghci-interface/src/Main.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO.hs
 badd +43 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Escaping.hs
 badd +2 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Formatting.hs
-badd +31 Projects/tm-ghci/ghci-interface/src/System/IO/Strict.hs
+badd +15 Projects/tm-ghci/ghci-interface/src/System/IO/Strict.hs
 badd +40 Projects/tm-ghci/ghci-interface/src/Common/Control/IO/Types.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/Common/Control/IO/Classes.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/Common/Control/IO/@
 badd +30 Projects/tm-ghci/ghci-interface/src/Common/Control/IO/Streams.hs
-badd +32 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO.hs
-badd +3 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Input/Writing.hs
+badd +15 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO.hs
+badd +38 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Input/Writing.hs
 badd +0 Projects/tm-ghci/ghci-interface/boneyard/GHCi.Control.IO.Output.Reading
 badd +1 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Writing.hs
 argglobal
@@ -93,12 +93,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 48 - ((47 * winheight(0) + 39) / 79)
+let s:l = 37 - ((36 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 48
-normal! 0
+keepjumps 37
+normal! 040|
 lcd ~/Projects/tm-ghci/ghci-interface/src
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/System/IO/Strict.hs
@@ -114,12 +114,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 31 - ((30 * winheight(0) + 39) / 79)
+let s:l = 17 - ((16 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 31
-normal! 059|
+keepjumps 17
+normal! 023|
 lcd ~/Projects/tm-ghci/ghci-interface/src/System/IO
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/Common/Control/IO/Streams.hs
@@ -135,12 +135,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 30 - ((29 * winheight(0) + 39) / 79)
+let s:l = 44 - ((43 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 30
-normal! 024|
+keepjumps 44
+normal! 0
 lcd ~/Projects/tm-ghci/ghci-interface/src/Common/Control/IO
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
@@ -261,12 +261,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 32 - ((31 * winheight(0) + 39) / 79)
+let s:l = 41 - ((40 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 32
-normal! 031|
+keepjumps 41
+normal! 025|
 lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
@@ -282,12 +282,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 7 - ((6 * winheight(0) + 39) / 79)
+let s:l = 73 - ((57 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 7
-normal! 030|
+keepjumps 73
+normal! 022|
 lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
@@ -303,11 +303,11 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 45 - ((43 * winheight(0) + 39) / 79)
+let s:l = 99 - ((72 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 45
+keepjumps 99
 normal! 0
 lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
 tabnext
@@ -324,12 +324,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 3 - ((2 * winheight(0) + 39) / 79)
+let s:l = 49 - ((48 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 3
-normal! 038|
+keepjumps 49
+normal! 0
 lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Input
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Sequencing.hs
@@ -350,7 +350,7 @@ if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 27
-normal! 0
+normal! 032|
 lcd ~/Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/src/TmGHCi/Control/IO/Bridging.hs

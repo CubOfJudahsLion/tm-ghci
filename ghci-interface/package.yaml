@@ -3,7 +3,7 @@ spec-version: 0.36.0
 name: GHCIInterface
 synopsis: Interface module between GHCi and TeXmacs
 github: CubOfJudahsLion/tm-ghci
-version: 0.2.1.0
+version: 0.3.0.0
 author: Alexander Feterman Naranjo <10951848+CubOfJudahsLion@users.noreply.github.com>
 copyright: (c) 2023-2026 Alexander Feterman Naranjo
 license: GPL-3.0-or-later
@@ -25,10 +25,14 @@ executable:
     - deepseq
     - mtl
     - process
+  default-extensions:
+    - NoStarIsType
   other-extensions:
     - DataKinds
     - DefaultSignatures
     - DeriveAnyClass
+    - DuplicateRecordFields
+    - FunctionalDependencies
     - LambdaCase
     - PatternSynonyms
     - RoleAnnotations
@@ -40,7 +44,7 @@ tests:
     source-dirs: tests
     main: Main.hs
     dependencies:
+      - hedgehog
       - hspec
-      - quicktest
       - tasty
 

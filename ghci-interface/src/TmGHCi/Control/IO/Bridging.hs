@@ -13,6 +13,7 @@
 -}
 
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module TmGHCi.Control.IO.Bridging ( mainLoop ) where
 
@@ -23,18 +24,15 @@ import Control.Monad ( when )
 import Data.List ( intercalate, singleton )
 import Data.List.NonEmpty ( toList )
 import Data.Maybe ( maybe )
-import GHCi.Control.IO.Types  ( OutputTag(..), Tagged, pattern (:@)
+import GHCi.Control.IO.Types  ( Tagged, pattern (:<>)
                               , TaggedLine, TaggedLines1
-                              , GHCiHandles(..)
                               )
 import GHCi.Control.IO.Output.Sequencing
 import GHCi.Data.String.Utils
 import System.IO  ( Handle
                   , stdin, stdout
-                  -- , hSetEncoding, utf16le
                   , hPutStr, hFlush
                   )
-import System.IO.Strict ( readImmediate )
 import TeXmacs.Data.String.Formatting
 
 
@@ -51,7 +49,7 @@ tagToFormat Out = AsOutput
 
 --  Writes a 'TaggedLine', using the proper format and output stream.
 formatTaggedLine :: TaggedLine -> String
-formatTaggedLine (tag :@ plainText) = formatForTeXmacs (tagToFormat tag) plainText
+formatTaggedLine (tag :<> plainText) = formatForTeXmacs (tagToFormat tag) plainText
 
 
 --  Turns outputs and prompt into a single formatted line.
@@ -73,7 +71,7 @@ mainLoop (GHCiHandles {ghciIn, ghciOut, ghciErr}) = do
   loop
   where
     loop :: IO ()
-    loop  =   captureOutputs (Out :@ ghciOut, Err :@ ghciErr)
+    loop  =   captureOutputs (Out :<> ghciOut, Err :<> ghciErr)
           >>= hPutStr stdout . joinLinesAndPrompt . extractPrompt
           >>  hFlush stdout
           >>  readImmediate stdin

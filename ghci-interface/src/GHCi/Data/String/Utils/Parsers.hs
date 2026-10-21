@@ -18,6 +18,15 @@ import Data.Char ( isSpace )
 import Data.List ( uncons )
 import Data.Maybe ( fromMaybe )
 import Text.ParserCombinators.ReadP
+  ( ReadP
+  , char
+  , choice
+  , eof
+  , optional
+  , readP_to_S
+  , satisfy
+  , skipSpaces
+  )
 
 
 ------------------------------------------

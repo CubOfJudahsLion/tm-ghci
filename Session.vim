@@ -12,8 +12,8 @@ let s:shortmess_save = &shortmess
 set shortmess+=aoO
 badd +1 Projects/tm-ghci/Session.vim
 badd +9 Projects/tm-ghci/Makefile
-badd +15 Projects/tm-ghci/CHANGELOG.md
-badd +10 Projects/tm-ghci/ghci-interface/package.yaml
+badd +7 Projects/tm-ghci/CHANGELOG.md
+badd +22 Projects/tm-ghci/ghci-interface/package.yaml
 badd +6 Projects/tm-ghci/ghci-interface/src/Main.hs
 badd +17 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/ControlCharacters.hs
 badd +16 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/Char/ControlCharacters.hs
@@ -25,7 +25,7 @@ badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils/Parsers.hs
 badd +1 Projects/tm-ghci/ghci-interface/src/TeXmacs/Data/String/Utils.hs
 badd +2 .local/bin/texplug
 badd +234 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO-Boneyard.hs
-badd +9 Projects/tm-ghci/readme/Makefile
+badd +36 Projects/tm-ghci/readme/Makefile
 badd +3 Projects/tm-ghci/ghci-interface/src/TeXmacs/Control/IO/Types.hs
 badd +11 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Types.hs
 badd +16 Projects/tm-ghci/ghci-interface/src/GHCi/Control/IO/Output/Reading.hs
@@ -37,7 +37,8 @@ badd +27 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils/Parsers.hs
 badd +24 Projects/tm-ghci/ghci-interface/src/GHCi/Data/String/Utils.hs
 badd +28 Projects/tm-ghci/ghci-interface/src/System/IO/StrictImmediate.hs
 badd +153 Projects/tm-ghci/readme/README.tm
-badd +1 Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
+badd +45 Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
+badd +1 Projects/tm-ghci/ghci-interface/ghci-interface.cabal
 argglobal
 %argdel
 tabnew +setlocal\ bufhidden=wipe
@@ -100,14 +101,16 @@ setlocal foldlevel=3
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-36
+21
 sil! normal! zo
-let s:l = 10 - ((9 * winheight(0) + 39) / 79)
+24
+sil! normal! zo
+let s:l = 22 - ((21 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 10
-normal! 04|
+keepjumps 22
+normal! 018|
 lcd ~/Projects/tm-ghci/ghci-interface
 tabnext
 edit ~/Projects/tm-ghci/ghci-interface/GHCIInterface.cabal
@@ -123,11 +126,11 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 39) / 79)
+let s:l = 45 - ((44 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
+keepjumps 45
 normal! 0
 lcd ~/Projects/tm-ghci/ghci-interface
 tabnext
@@ -142,11 +145,11 @@ setlocal foldlevel=1
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-let s:l = 9 - ((8 * winheight(0) + 39) / 79)
+let s:l = 36 - ((35 * winheight(0) + 39) / 79)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 9
+keepjumps 36
 normal! 0
 lcd ~/Projects/tm-ghci/readme
 tabnext 1

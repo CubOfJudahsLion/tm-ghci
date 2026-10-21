@@ -14,37 +14,43 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module GHCi.Control.IO.Output.Reading 
+module GHCi.Control.IO.Output.Reading
   ( GHCiReader
   , GHCiReadableHandle
-  , mkClientReader
+  , checkGHCiReadableHandle
+  , mkGHCiReader
+  , mkGHCiReaderE
   ) where
 
-import Common.Control.IO.Streams
+
+import Common.Control.IO.Streams ( ReaderStream(..) )
 import Control.Arrow ( Arrow((&&&)), (>>>) )
-import Control.DeepSeq ( (<$!!>) )
-import Control.Monad.Except
-import Control.Monad.Trans
-import Data.List.NonEmpty ( NonEmpty(..), toList, nonEmpty )
+import Control.Monad.Except ( MonadError(throwError), ExceptT )
+import Control.Monad.Trans ( MonadTrans(lift) )
+import Data.List.NonEmpty ( NonEmpty(..), nonEmpty, toList )
 import Data.Maybe ( fromMaybe )
 import GHCi.Control.IO.Types
-import System.IO
-import System.IO.Strict
-import Data.Functor.Contravariant (Equivalence(getEquivalence))
+    ( GHCiReadChannel
+    , SingGHCiReadChannel
+    , TaggedLines1
+    , WrapGHCiReadChannel(MkWrapGHCiReadChannel)
+    , pattern (:<>)
+    )
+import System.IO ( Handle, hIsReadable, hReady )
+import System.IO.Strict ( readAvailable )
 
 
---  Reads text using 'readAvailable', splitting it into lines and tagging them with the
---  provided 'OutputTag'.
-splitAndTag :: SGHCiReadChannel channel -- ^  Tag to attach
-            -> NonEmpty Char            -- ^  Text to split
-            -> TaggedLines1 channel     -- ^  Returns the list of tagged lines
-splitAndTag tag =   toList
-                >>> (:| []) &&& (lines >>> nonEmpty)
-                >>> uncurry fromMaybe
-                >>> fmap (tag :@)
+--  Splits text into lines and tags them with the provided 'SingGHCiReadChannel'.
+splitAndTag :: SingGHCiReadChannel channel  -- ^  Channel with which to tag the resulting lines
+            -> NonEmpty Char                -- ^  Text to split
+            -> TaggedLines1                 -- ^  Returns the list of tagged lines
+splitAndTag sing  =   toList
+                  >>> (:| []) &&& (lines >>> nonEmpty)
+                  >>> uncurry fromMaybe
+                  >>> fmap ((MkWrapGHCiReadChannel sing) :<>)
 
 
--- |  A handle that's been proven readable.
+-- |  A handle that's been proven to be readable.
 newtype GHCiReadableHandle = MkGHCiReadableHandle Handle
 
 -- |  Creates a 'GHCiReadableHandle' from a normal 'Handle', provided the given handle is actually readable.
@@ -52,37 +58,48 @@ checkGHCiReadableHandle :: Handle -> ExceptT String IO GHCiReadableHandle
 checkGHCiReadableHandle !h = do
   lift (hIsReadable h) >>= \case
     True  -> pure $ MkGHCiReadableHandle h
-    _     -> throwError $   "GHCi.Control.IO.Output.Reading.checkGHCiReadableHandle: Error: <"
-                        ++  show h
-                        ++  "> isn't readable."
+    _     -> throwError $  "GHCi.Control.IO.Output.Reading.checkGHCiReadableHandle: Error: <"
+                        ++ show h
+                        ++ "> isn't readable."
 
 
 -- |  Stores a readable stream from a client process. This is an output stream
 --    with a reversed direction: we're reading from @stdout@ or @stderr@.
 data GHCiReader (channel :: GHCiReadChannel) = MkGHCiReader
-  { tag         :: !(SGHCiReadChannel channel)  --  The tag we'll use in our output
+  { singleton   :: !(SingGHCiReadChannel channel)  --  The tag we'll use in our output
   , waitMillis  :: !Int                         --  Grace period between reads
   , handle      :: !Handle                      --  The handle we read from.
   , other       :: !Handle                      --  The other handle we must be aware of, in case the client alternates streams.
   }
 
 -- |  Smart constructor for a 'GHCiReader'. Requires [readable handles](GHCiReadableHandle).
-mkClientReader  :: SGHCiReadChannel channel -- ^  [Channel tag](GHCiReadChannel) to use in output
-                -> Int                      -- ^  How long to allow between character reads. Zero means synchronous reading.
-                -> GHCiReadableHandle       -- ^  'Handle' to read from.
-                -> GHCiReadableHandle       -- ^  A second 'Handle' to watch. See 'readAvailable' for details.
-                -> GHCiReader channel       -- ^  Returns a 'GHCiReader' if the handles are readable, a string error otherwise.
-mkClientReader tag waitMillis (MkGHCiReadableHandle handle) (MkGHCiReadableHandle other) =
-  MkGHCiReader { tag, waitMillis, handle, other }
+mkGHCiReader  :: SingGHCiReadChannel channel -- ^  [Channel tag](GHCiReadChannel) to use in output
+              -> Int                      -- ^  How long to allow between character reads. Zero means synchronous reading.
+              -> GHCiReadableHandle       -- ^  'Handle' to read from.
+              -> GHCiReadableHandle       -- ^  A second 'Handle' to watch. See 'readAvailable' for details.
+              -> GHCiReader channel       -- ^  Returns a 'GHCiReader'.
+mkGHCiReader singleton waitMillis (MkGHCiReadableHandle handle) (MkGHCiReadableHandle other) =
+  MkGHCiReader { singleton, waitMillis, handle, other }
 
 
---  Make 'GHCiReader's work with 
-instance CodedStream (GHCiReader (channel :: GHCiReadChannel)) where
-  type UserType (GHCiReader channel) = TaggedLines1 channel
-  type NativeType (GHCiReader channel) = NonEmpty Char
+-- |  Monadic version of 'mkGHCiReader' within the @'ExceptT' 'String' 'IO'@ transformer.
+mkGHCiReaderE :: SingGHCiReadChannel channel
+              -> Int
+              -> ExceptT String IO GHCiReadableHandle
+              -> ExceptT String IO GHCiReadableHandle
+              -> ExceptT String IO (GHCiReader channel)
+mkGHCiReaderE singleton waitMillis tHandle tOther = do
+  handle <- tHandle
+  other  <- tOther
+  pure $ mkGHCiReader singleton waitMillis handle other
+{-# INLINABLE mkGHCiReaderE #-}
 
+
+--  Instance for 'ReaderStream' for 'GHCiReader'. Any /GHCi/ reader (client) stream
+--  reads 'NonEmpty Char's and produces a non-empty 'TaggedLines1'
 instance ReaderStream (GHCiReader (channel :: GHCiReadChannel)) where
-  decode (MkGHCiReader { tag }) = splitAndTag tag
+  type UserReadType (GHCiReader channel) = TaggedLines1
+  decode (MkGHCiReader { singleton }) = splitAndTag singleton
   isStreamReady (MkGHCiReader { handle }) = hReady handle
-  readRawStream (MkGHCiReader { waitMillis, handle, other }) = readAvailable waitMillis handle (Just other)
+  readStreamRaw (MkGHCiReader { waitMillis, handle, other }) = readAvailable waitMillis handle (Just other)
 

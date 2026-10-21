@@ -14,24 +14,20 @@
 -}
 
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module GHCi.Control.IO.Output.Sequencing ( captureOutputs, extractPrompt ) where
 
 
+import Common.Control.IO.Streams
 import Control.Arrow ( first, (>>>) )
 import Control.DeepSeq ( ($!!), (<$!!>) )
 import Control.Monad ( when )
 import Control.Concurrent ( threadDelay )
 import Data.Bits ( (.&.) )
 import Data.List.NonEmpty ( NonEmpty(..), nonEmpty, toList )
-import GHCi.Control.IO.Types  ( OutputTag(Out)
-                              , Tagged
-                              , pattern (:@)
-                              , TaggedLine
-                              , TaggedLines
-                              , TaggedLines1
-                              )
-import GHCi.Control.IO.Output.Reading ( readAndTagAvailable )
+import GHCi.Control.IO.Types
+import GHCi.Control.IO.Output.Reading
 import System.IO ( Handle, hReady )
 
 
@@ -52,21 +48,21 @@ cycleWait = 5
 --    their origin stream (this helps in later formatting and directing output.)
 --    The function will wait and read the first 'Handle'; afterwards, it will
 --    read from either as it becomes available, within a maximum inactivity limit.
-captureOutputs  :: (Tagged Handle, Tagged Handle) -- ^  The streams to be read alternatingly
+captureOutputs  :: (GHCiReader c1, GHCiReader c2) -- ^  The streams to be read alternatingly
                 -> IO TaggedLines1                -- ^  A non-empty list of lines, each tagged with its origin output stream
-captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
-  (x :| xs) <- readAndTagAvailable tag charWait handle otherHandle  --  First mandatory read
-  let accum = foldl' (.) (x :|) $ map (:) xs                        --  Turn lines read into a /difference list/
-  capture' accum 0 0 (cold, hot)
+captureOutputs (!hotStream, !coldStream) = do
+  (x :| xs) <- readStream hotStream              --  First mandatory read
+  let accum = foldl' (.) (x :|) $ map (:) xs  --  Turn lines read into a /difference list/
+  capture' accum 0 0 (coldStream, hotStream)
   where
     --  Worker function. Swaps streams on recursion so each gets its turn.
     capture'  :: (TaggedLines -> TaggedLines1)  --  Output accumulator (as a difference list)
               -> Int                            --  Total dead time after last output
               -> Int                            --  Number of 'Handle' readiness test failed in a row
-              -> (Tagged Handle, Tagged Handle) --  Switching stream pair
+              -> (GHCiReader c1, GHCiReader c2) --  Switching stream pair
               -> IO TaggedLines1                --  Returns all tagged lines gathered
-    capture' !accum !deadTime !failedTests (hotStream@(tag :@ handle), coldStream@(_ :@ otherHandle)) = do
-      readable <- hReady handle
+    capture' !accum !deadTime !failedTests !(hotStream, coldStream) = do
+      readable <- isStreamReady hotStream
       if not readable && failedTests .&. 1 == 1 && deadTime >= maxDeadTime then
         --  If there are no ready streams and we're over the idle limit, stop. Note that
         --  'failedTests' is one failure short now, i.e., if the actual failure count is
@@ -76,7 +72,7 @@ captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
         (accum', deadTime', delayBeforeRecursion, failedTests') <-
           if readable then do
             --  If a stream is readable, we read what we can with minimal pause
-            taggedTexts <- readAndTagAvailable tag charWait handle otherHandle
+            taggedTexts <- readStream hotStream
             let extendedAccum = foldl' (.) accum $ (:) <$> taggedTexts
             --  A successful read resets both dead time and failure count
             pure (extendedAccum, 0, 0, 0)
@@ -96,10 +92,10 @@ captureOutputs (hot@(tag :@ handle), cold@(_ :@ otherHandle)) = do
 --    produces the prompt as its last @STDOUT@ line.)
 extractPrompt :: TaggedLines1 -> (Maybe TaggedLines1, Maybe String)
 extractPrompt =   toList
-              >>> foldr (\taggedLine@(tag :@ line) !(lines, maybeLast) ->
+              >>> foldr (\taggedLine@(tag :<> line) !(lines, maybeLast) ->
                           case (tag, maybeLast) of
-                            (Out, Nothing)  -> (lines,              Just line)
-                            (_  , _      )  -> (taggedLine : lines, maybeLast))
+                            (MkWrapGHCiReadChannel SingGHCiOutputChannel, Nothing)  -> (lines,              Just line)
+                            (_                                          , _      )  -> (taggedLine : lines, maybeLast))
                         ([], Nothing)
               >>> first nonEmpty
 

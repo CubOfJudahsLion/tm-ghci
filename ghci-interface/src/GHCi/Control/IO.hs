@@ -11,7 +11,7 @@
     corresponding operations, plus some extra facilities.
 -}
 
-{-# LANGUAGE DisambiguateRecordFields #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 
 module GHCi.Control.IO
   ( GHCiHandles(..)
@@ -43,3 +43,4 @@ data GHCiStreams = MkGHCiStreams
   , ghciOut :: !Handle
   , ghciErr :: !Handle
   }
+

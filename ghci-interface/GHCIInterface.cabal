@@ -5,7 +5,7 @@ cabal-version: 2.2
 -- see: https://github.com/sol/hpack
 
 name:           GHCIInterface
-version:        0.2.1.0
+version:        0.3.0.0
 synopsis:       Interface module between GHCi and TeXmacs
 category:       Control,
                 Language,
@@ -29,9 +29,9 @@ executable GHCIInterface
   other-modules:
       Common.Control.IO.Streams
       GHCi.Control.IO
+      GHCi.Control.IO.Input.Writing
       GHCi.Control.IO.Output.Reading
       GHCi.Control.IO.Output.Sequencing
-      GHCi.Control.IO.Output.Writing
       GHCi.Control.IO.Types
       GHCi.Data.String.Utils
       GHCi.Data.String.Utils.Parsers
@@ -42,11 +42,14 @@ executable GHCIInterface
       TmGHCi.Control.IO.Bridging
   hs-source-dirs:
       src
+  default-extensions:
+      NoStarIsType
   other-extensions:
       DataKinds
       DefaultSignatures
       DeriveAnyClass
-      DisambiguateRecordFields
+      DuplicateRecordFields
+      FunctionalDependencies
       LambdaCase
       PatternSynonyms
       RoleAnnotations
@@ -66,7 +69,7 @@ test-suite test
       tests
   build-depends:
       base >=4.19.1 && <5
+    , hedgehog
     , hspec
-    , quicktest
     , tasty
   default-language: GHC2021

@@ -11,84 +11,103 @@
 -}
 
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE PatternSynonyms #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeData #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_HADDOCK show-extensions #-}
 
 module GHCi.Control.IO.Types
-  ( GHCiReadChannel(..)
-  , GHCiWriteChannel(..)
-  , SGHCiReadChannel(..)
-  , SGHCiWriteChannel(..)
+  ( -- *  Reader channels
+    GHCiReadChannel(..)
+  , SingGHCiReadChannel(..)
+  , WrapGHCiReadChannel(..)
+    -- ** Channel-tagging types and ptterns
   , Tagged
-  , pattern (:@)
+  , pattern (:<>)
   , TaggedLine
   , TaggedLines
   , TaggedLines1
+    -- *  Writer channels
+  , GHCiWriteChannel(..)
+  , SingGHCiWriteChannel(..)
   ) where
 
 
-import Control.DeepSeq ( NFData(..) )
+import Control.DeepSeq ( NFData(rnf) )
+import Data.Kind ( Type, Constraint )
 import Data.List.NonEmpty ( NonEmpty )
-import Data.Kind ( Type )
-import Data.Proxy ( Proxy(..) )
-import TeXmacs.Data.String.Formatting ( FormatAs(AsOutput, AsError) )
-import System.IO ( Handle )
 
+
+--------------------------------------------------------------------------------
+--  Reader channels and related types
+--------------------------------------------------------------------------------
 
 -- |  Types of readable channels from /GHCi/.
 type data GHCiReadChannel = GHCiOutputChannel
                           | GHCiErrorChannel
 
 -- |  Singleton for 'GHCiReadChannel'.
-data SGHCiReadChannel (channel :: GHCiReadChannel) where
-  SGHCiOutputChannel  :: SGHCiReadChannel GHCiOutputChannel
-  SGHCiErrorChannel   :: SGHCiReadChannel GHCiErrorChannel
+data SingGHCiReadChannel (channel :: GHCiReadChannel) where
+  SingGHCiOutputChannel  :: SingGHCiReadChannel GHCiOutputChannel
+  SingGHCiErrorChannel   :: SingGHCiReadChannel GHCiErrorChannel
 
-deriving instance Eq (SGHCiReadChannel ch)
-
-instance Show (SGHCiReadChannel GHCiOutputChannel) where
-  show _ = "<GHCi standard output>"
-
-instance Show (SGHCiReadChannel GHCiErrorChannel) where
-  show _ = "<GHCi standard error>"
-
-instance NFData (SGHCiReadChannel (channel :: GHCiReadChannel)) where
+instance NFData (SingGHCiReadChannel (channel :: GHCiReadChannel)) where
   rnf !_ = ()
 
+-- |  Existential wrapper around 'SingGHCiReadChannel'.
+data WrapGHCiReadChannel where
+  MkWrapGHCiReadChannel :: forall (channel :: GHCiReadChannel). SingGHCiReadChannel channel -> WrapGHCiReadChannel
+
+instance Show WrapGHCiReadChannel where
+  show :: WrapGHCiReadChannel -> String
+  show (MkWrapGHCiReadChannel SingGHCiOutputChannel) = "<GHCi stdout>"
+  show (MkWrapGHCiReadChannel SingGHCiErrorChannel)  = "<GHCi stderr>"
+
+instance Eq WrapGHCiReadChannel where
+  (==) (MkWrapGHCiReadChannel SingGHCiOutputChannel) (MkWrapGHCiReadChannel SingGHCiOutputChannel) = True
+  (==) (MkWrapGHCiReadChannel SingGHCiErrorChannel)  (MkWrapGHCiReadChannel SingGHCiErrorChannel)  = True
+  (==) _                                             _                                             = False
+
+instance NFData WrapGHCiReadChannel where
+  rnf !(MkWrapGHCiReadChannel singleton) = rnf singleton
+
+
+--------------------------------------------------------------------------------
+--  Channel-tagging types
+--------------------------------------------------------------------------------
+
+-- |  A data to tag file output with its type of origin stream
+-- |  Represents a datum tagged with a source stream
+type Tagged a = (WrapGHCiReadChannel, a)
+
+-- |  @w :<> a@ [de]constructs a 'Tagged a'.
+pattern (:<>) :: WrapGHCiReadChannel -> a -> Tagged a
+pattern w :<> a = (w, a)
+infix 6 :<>
+
+
+-- |  Represents a single line tagged with its source stream. Note that we use a regular 'String'
+--    (instead of a t'NonEmpty' 'Char') as /GHCi/ output can produce empty lines arbitrarily.
+type TaggedLine = Tagged String
+
+-- |  A (possibly empty) list of 'TaggedLine's.
+type TaggedLines = [TaggedLine]
+
+-- |  A 'NonEmpty' list of 'TaggedLine's.
+type TaggedLines1 = NonEmpty TaggedLine
+
+
+--------------------------------------------------------------------------------
+--  Writer channels and related types
+--------------------------------------------------------------------------------
 
 -- |  Types of writable channels into /GHCi/.
 type data GHCiWriteChannel = GHCiInputChannel
 
 -- |  Singleton for 'GHCiWriteChannel'.
-data SGHCiWriteChannel (channel :: GHCiWriteChannel) where
-  SGHCiInputChannel :: SGHCiWriteChannel GHCiInputChannel
-
-deriving instance Eq (SGHCiWriteChannel (channel :: GHCiWriteChannel))
-
-instance Show (SGHCiWriteChannel (channel :: GHCiWriteChannel)) where
-  show _ = "<GHCi standard input>"
-
--- |  A data to tag file output with its type of origin stream
--- |  Represents a datum tagged with a source stream
-type Tagged (chan :: GHCiReadChannel) a = (SGHCiReadChannel chan, a)
-
--- |  @t :\@ a@ [de]constructs a @Tagged a@.
-pattern (:@) :: (SGHCiReadChannel chan) -> a -> Tagged chan a
-pattern t :@ a = (t, a)
-infix 6 :@
-
-
--- |  Represents a single line tagged with its source stream. Note that we use a regular 'String'
---    (instead of a t'NonEmpty' 'Char') as /GHCi/ output can produce empty lines arbitrarily.
-type TaggedLine (chan :: GHCiReadChannel) = Tagged chan String
-
--- |  A (possibly empty) list of 'TaggedLine's.
-type TaggedLines (chan :: GHCiReadChannel) = [TaggedLine chan]
-
--- |  A 'NonEmpty' list of 'TaggedLine's.
-type TaggedLines1 (chan :: GHCiReadChannel) = NonEmpty (TaggedLine chan)
+data SingGHCiWriteChannel (channel :: GHCiWriteChannel) where
+  SingGHCiInputChannel :: SingGHCiWriteChannel GHCiInputChannel
 
